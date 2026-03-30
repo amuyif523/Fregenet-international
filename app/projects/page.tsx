@@ -29,7 +29,7 @@ export default async function ProjectsPage() {
                             Empowering through <br/><span className="text-primary italic">Education & Care</span>.
                         </h1>
                         <p className="text-xl text-secondary leading-relaxed max-w-2xl font-body">
-                            Fregenet International focuses on sustainable community growth through targeted initiatives in Addis Ababa, ensuring every child has the tools to succeed.
+                            Fregenet Foundation focuses on sustainable community growth through targeted initiatives in Addis Ababa, ensuring every child has the tools to succeed.
                         </p>
                     </div>
                 </section>

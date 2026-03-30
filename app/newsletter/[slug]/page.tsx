@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!newsletter) {
     return {
       title: 'Newsletter Not Found',
-      description: "Stay updated with Fregenet International's impact in Ethiopia.",
+      description: "Stay updated with Fregenet Foundation's impact in Ethiopia.",
     };
   }
 

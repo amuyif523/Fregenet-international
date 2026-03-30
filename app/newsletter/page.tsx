@@ -8,8 +8,8 @@ import { prisma } from '@/lib/prisma';
 import { safeDbQuery } from '@/lib/safe-db';
 
 export const metadata: Metadata = {
-  title: 'Newsletter | Fregenet International',
-  description: "Stay updated with Fregenet International's impact in Ethiopia.",
+  title: 'Newsletter | Fregenet Foundation',
+  description: "Stay updated with Fregenet Foundation's impact in Ethiopia.",
 };
 
 export const dynamic = 'force-dynamic';
@@ -39,7 +39,7 @@ export default async function NewsletterPage() {
               Newsletter Archive
             </h1>
             <p className="mt-4 max-w-3xl text-lg leading-relaxed text-slate-700">
-              Browse past updates, community milestones, and progress reports from Fregenet International.
+              Browse past updates, community milestones, and progress reports from Fregenet Foundation.
             </p>
           </div>
         </section>

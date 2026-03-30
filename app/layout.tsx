@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { validateCriticalEnvOnStartup } from '@/lib/env';
 
 export const metadata: Metadata = {
-  title: "Fregenet International | Empowering Ethiopian Leaders",
+  title: "Fregenet Foundation | Empowering Ethiopian Leaders",
   description: "Building a sustainable future through education, nutrition, and technological empowerment for the children of Ethiopia.",
 };
 

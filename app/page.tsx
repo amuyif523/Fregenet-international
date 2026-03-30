@@ -21,7 +21,7 @@ export default function Home() {
                                 Breaking the Cycle of Poverty Through Early Education
                             </h1>
                             <p className="text-xl md:text-2xl text-white/90 leading-relaxed mb-10 max-w-2xl">
-                                Since 2004, Fregenet International has served children from Pre-K through 4th Grade in Addis Ababa with free, holistic support designed to unlock lifelong opportunity.
+                                Since 2004, Fregenet Foundation has served children from Pre-K through 4th Grade in Addis Ababa with free, holistic support designed to unlock lifelong opportunity.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <a href="/contact" className="px-8 py-4 bg-[#0b6f77] text-white font-bold rounded-lg shadow-sm hover:bg-[#095961] transition-all duration-300 flex items-center justify-center gap-2">
@@ -73,7 +73,7 @@ export default function Home() {
                                 <h2 className="font-headline text-4xl md:text-5xl font-extrabold text-[#1A1A1B] leading-tight">A Vision That Continued Beyond 2003</h2>
                                 <p className="max-w-prose text-secondary leading-relaxed">
                                     In 2003, Fregenet Tafesse Woubshet passed away before she could fulfill her dream of returning to Ethiopia to serve vulnerable children.
-                                    Her family and community chose to carry that calling forward, establishing Fregenet International in 2004 as a living legacy of compassion,
+                                    Her family and community chose to carry that calling forward, establishing Fregenet Foundation in 2004 as a living legacy of compassion,
                                     dignity, and practical support.
                                 </p>
                                 <div className="rounded-xl border border-[#e8dcb3] bg-white/70 px-5 py-4 inline-flex items-center gap-3 text-[#6f5a1a] font-semibold">

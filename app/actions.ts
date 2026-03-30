@@ -328,7 +328,7 @@ export async function createCheckoutSession(
                         currency: 'usd',
                         unit_amount: amountInCents,
                         product_data: {
-                            name: 'Fregenet International Donation',
+                            name: 'Fregenet Foundation Donation',
                             description: 'Support education, nutrition, and technology programs.',
                         },
                     },

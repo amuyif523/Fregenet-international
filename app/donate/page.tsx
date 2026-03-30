@@ -124,7 +124,7 @@ export default function DonatePage() {
           <section className="rounded-2xl border border-[#d9d6cc] bg-white p-6 space-y-3">
             <h2 className="font-headline text-2xl font-extrabold text-[#1A1A1B]">Beyond Funding: A Safety Net</h2>
             <p className="text-secondary leading-relaxed">
-              Fregenet International also serves as a trusted counselor and help-line for young people in crisis.
+              Fregenet Foundation also serves as a trusted counselor and help-line for young people in crisis.
               We offer practical guidance, referrals, and compassionate support so students and families are not left alone during critical moments.
             </p>
           </section>

@@ -1,4 +1,4 @@
-# Fregenet International
+# Fregenet Foundation
 
 ## Development Setup
 
