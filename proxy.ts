@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server'
 import { verifySessionToken } from '@/lib/session'
 import { getAuthEnv } from '@/lib/env'
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const sessionToken = request.cookies.get('fregenet_session')?.value
   const { jwtSecret } = getAuthEnv()
   const isAuthenticated = jwtSecret

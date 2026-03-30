@@ -1,7 +1,6 @@
 'use client';
 
-import { useActionState, useMemo, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useActionState, useEffect, useMemo, useState } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { createCheckoutSession } from '@/app/actions';
@@ -21,8 +20,19 @@ const presetAmounts = [25, 100, 250];
 export default function DonatePage() {
   const [selectedAmount, setSelectedAmount] = useState<number>(25);
   const [customAmount, setCustomAmount] = useState<string>('');
+  const [checkoutStatus, setCheckoutStatus] = useState<{ success: boolean; canceled: boolean }>({
+    success: false,
+    canceled: false,
+  });
   const [state, formAction, pending] = useActionState(createCheckoutSession, initialState);
-  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setCheckoutStatus({
+      success: params.get('success') === '1',
+      canceled: params.get('canceled') === '1',
+    });
+  }, []);
 
   const effectiveAmount = useMemo(() => {
     const custom = Number.parseFloat(customAmount);
@@ -106,8 +116,8 @@ export default function DonatePage() {
               {pending ? 'Redirecting...' : `Donate $${effectiveAmount.toFixed(2)} Now`}
             </button>
 
-            {searchParams.get('canceled') === '1' ? <p className="text-amber-700 text-sm font-semibold">Checkout was canceled. You can try again anytime.</p> : null}
-            {searchParams.get('success') === '1' ? <p className="text-green-700 text-sm font-semibold">Thank you. Your donation was submitted successfully.</p> : null}
+            {checkoutStatus.canceled ? <p className="text-amber-700 text-sm font-semibold">Checkout was canceled. You can try again anytime.</p> : null}
+            {checkoutStatus.success ? <p className="text-green-700 text-sm font-semibold">Thank you. Your donation was submitted successfully.</p> : null}
             {state.message ? <p className="text-red-700 text-sm font-semibold">{state.message}</p> : null}
           </form>
 

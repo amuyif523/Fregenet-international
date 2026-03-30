@@ -22,6 +22,7 @@ This checklist captures the minimum pre-deployment validation for the current ba
 
 - [ ] Start app: `npm run dev`.
 - [ ] App starts without fatal startup errors.
+- [ ] Production build succeeds: `npm run build`.
 
 ## 4. Smoke Routes
 

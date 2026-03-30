@@ -1,14 +1,21 @@
 "use client";
 
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
-import { useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
 import { Globe, AtSign, Send } from 'lucide-react';
 import { subscribeToNewsletter } from '@/app/actions';
 
-function SubscribeButton() {
-    const { pending } = useFormStatus();
+type SubscribeState = {
+    success: boolean;
+    message: string;
+};
 
+const initialState: SubscribeState = {
+    success: false,
+    message: '',
+};
+
+function SubscribeButton({ pending }: { pending: boolean }) {
     return (
         <button
             type="submit"
@@ -21,27 +28,11 @@ function SubscribeButton() {
     );
 }
 
-function NewsletterSubmissionTracker({ onCompleted }: { onCompleted: () => void }) {
-    const { pending } = useFormStatus();
-    const wasPending = useRef(false);
-
-    useEffect(() => {
-        if (pending) {
-            wasPending.current = true;
-            return;
-        }
-
-        if (wasPending.current) {
-            wasPending.current = false;
-            onCompleted();
-        }
-    }, [pending, onCompleted]);
-
-    return null;
-}
-
 export const Footer = () => {
-    const [newsletterSuccess, setNewsletterSuccess] = useState(false);
+    const [state, formAction, pending] = useActionState(
+        async (_prevState: SubscribeState, formData: FormData) => subscribeToNewsletter(formData),
+        initialState
+    );
 
     return (
     <footer className="bg-[#f3f3f3] dark:bg-slate-950 font-body leading-relaxed text-sm">
@@ -79,12 +70,7 @@ export const Footer = () => {
             <div>
                 <h4 className="font-bold text-[#1A1A1B] dark:text-white mb-6 uppercase tracking-widest text-xs">Newsletter</h4>
                 <p className="text-slate-500 dark:text-slate-400 mb-4">Stay updated on our impact.</p>
-                <form
-                    action={subscribeToNewsletter}
-                    className="space-y-3"
-                    onSubmit={() => setNewsletterSuccess(false)}
-                >
-                    <NewsletterSubmissionTracker onCompleted={() => setNewsletterSuccess(true)} />
+                <form action={formAction} className="space-y-3">
                     <div className="flex">
                         <input
                             className="bg-white border-none text-sm px-4 py-2 w-full focus:ring-1 focus:ring-primary rounded-l"
@@ -93,9 +79,10 @@ export const Footer = () => {
                             name="email"
                             required
                         />
-                        <SubscribeButton />
+                        <SubscribeButton pending={pending} />
                     </div>
-                    {newsletterSuccess ? <p className="text-green-700 text-xs">Thank you for subscribing!</p> : null}
+                    {state.success ? <p className="text-green-700 text-xs">Thank you for subscribing!</p> : null}
+                    {state.message && !state.success ? <p className="text-red-700 text-xs">{state.message}</p> : null}
                 </form>
             </div>
         </div>
