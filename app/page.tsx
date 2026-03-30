@@ -1,7 +1,8 @@
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { NewsletterSignup } from '@/components/NewsletterSignup';
-import { Quote, School, Utensils, Shirt, Pencil, BookOpen, Bus, History, Users, GraduationCap } from 'lucide-react';
+import Image from 'next/image';
+import { Quote, Utensils, Shirt, Pencil, BookOpen, Library, History, Users, GraduationCap } from 'lucide-react';
 
 export default function Home() {
     return (
@@ -18,10 +19,10 @@ export default function Home() {
                     <div className="relative z-10 max-w-screen-2xl mx-auto px-8 w-full">
                         <div className="max-w-3xl">
                             <h1 className="font-headline text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight tracking-tight mb-6">
-                                Breaking the Cycle of Poverty Through Early Education
+                                Nurturing Tomorrow&apos;s Leaders from the Very Beginning
                             </h1>
                             <p className="text-xl md:text-2xl text-white/90 leading-relaxed mb-10 max-w-2xl">
-                                Since 2004, Fregenet Foundation has served children from Pre-K through 4th Grade in Addis Ababa with free, holistic support designed to unlock lifelong opportunity.
+                                Providing high-quality early childhood education and holistic care for young learners in Addis Ababa, Ethiopia.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <a href="/contact" className="px-8 py-4 bg-[#0b6f77] text-white font-bold rounded-lg shadow-sm hover:bg-[#095961] transition-all duration-300 flex items-center justify-center gap-2">
@@ -76,20 +77,25 @@ export default function Home() {
                                     Her family and community chose to carry that calling forward, establishing Fregenet Foundation in 2004 as a living legacy of compassion,
                                     dignity, and practical support.
                                 </p>
-                                <div className="rounded-xl border border-[#e8dcb3] bg-white/70 px-5 py-4 inline-flex items-center gap-3 text-[#6f5a1a] font-semibold">
-                                    <School className="w-5 h-5" />
-                                    School Legacy Image Placeholder
+                                <div className="relative aspect-video overflow-hidden rounded-xl border border-[#e8dcb3] bg-white/70">
+                                    <Image
+                                        src="/images/legacy.jpg"
+                                        alt="Fregenet Kidanewold Kassa, our inspiration"
+                                        fill
+                                        sizes="(min-width: 1024px) 58vw, 100vw"
+                                        className="object-cover"
+                                    />
                                 </div>
                             </div>
 
                             <div className="lg:col-span-5 rounded-2xl border border-[#0b6f77]/40 bg-gradient-to-br from-[#0b6f77] to-[#0a5a61] p-10 md:p-12 space-y-5 text-white">
                                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#bce7ea]">Core Mission</p>
-                                <h2 className="font-headline text-4xl md:text-5xl font-extrabold leading-tight">Breaking the Cycle of Poverty</h2>
+                                <h2 className="font-headline text-4xl md:text-5xl font-extrabold leading-tight">Building Strong Foundations for Lifelong Learning</h2>
                                 <p className="max-w-prose text-white/90 leading-relaxed">
-                                    Our mission is focused on early intervention from Pre-K to 4th Grade, where consistent education, nutrition,
+                                    Our mission is focused on high-quality Kindergarten education where consistent learning, nutrition,
                                     and care have the greatest long-term impact on a child&apos;s future.
                                 </p>
-                                <div className="pt-2 text-sm font-bold uppercase tracking-wider text-[#d7f1f2]">Pre-K to 4th Grade | Early Intervention First</div>
+                                <div className="pt-2 text-sm font-bold uppercase tracking-wider text-[#d7f1f2]">Kindergarten Focus | Early Childhood First</div>
                             </div>
                         </div>
 
@@ -106,7 +112,7 @@ export default function Home() {
                                 <div className="rounded-2xl border border-outline-variant/30 bg-white px-5 py-6 text-center shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1">
                                     <Utensils className="w-7 h-7 mx-auto mb-3 text-[#0b6f77]" />
                                     <p className="font-semibold text-[#1A1A1B]">Nutritious Meals</p>
-                                    <p className="text-xs text-secondary mt-1">2 per day</p>
+                                    <p className="text-xs text-secondary mt-1">Nutritious Daily Nourishment</p>
                                 </div>
                                 <div className="rounded-2xl border border-outline-variant/30 bg-white px-5 py-6 text-center shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1">
                                     <Shirt className="w-7 h-7 mx-auto mb-3 text-[#c7a548]" />
@@ -124,9 +130,9 @@ export default function Home() {
                                     <p className="text-xs text-secondary mt-1">Curriculum-ready materials</p>
                                 </div>
                                 <div className="rounded-2xl border border-outline-variant/30 bg-white px-5 py-6 text-center shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1">
-                                    <Bus className="w-7 h-7 mx-auto mb-3 text-[#0b6f77]" />
-                                    <p className="font-semibold text-[#1A1A1B]">Transportation</p>
-                                    <p className="text-xs text-secondary mt-1">Safe daily access</p>
+                                    <Library className="w-7 h-7 mx-auto mb-3 text-[#0b6f77]" />
+                                    <p className="font-semibold text-[#1A1A1B]">School Library</p>
+                                    <p className="text-xs text-secondary mt-1">Fostering a love for reading and learning from a young age.</p>
                                 </div>
                             </div>
                         </div>
@@ -134,7 +140,7 @@ export default function Home() {
                         <div className="mt-12 rounded-2xl border border-[#d7e9ea] bg-gradient-to-r from-[#eef8f8] to-[#f7f2df] p-8 md:p-10">
                             <p className="max-w-4xl text-sm md:text-base font-semibold text-[#1A1A1B] leading-relaxed">
                                 This professional, child-centered model allows teachers and families to focus on learning outcomes, emotional wellbeing,
-                                and long-term community resilience with consistent support from Pre-K to 4th Grade.
+                                and long-term community resilience through a strong Kindergarten foundation.
                             </p>
                         </div>
                     </div>
