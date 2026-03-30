@@ -30,7 +30,7 @@ export default async function TransparencyPage() {
                             </p>
                         </div>
                         <div className="md:w-5/12 hidden md:block">
-                            <img className="w-full h-full object-cover grayscale opacity-80 rounded-xl editorial-shadow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7ZaVfQQQGz-1Y-RKjwVVuuPymaqef4Um4ZXa7p73D94nmfENINV6mmac3toLb6TiOWEC9MAoeLQGdoGOCari42OyzhJcAI7Sofmojmxuoi4whOQk8uQVCyNUqBT1_jdOcjv1GRPCfe4EHdPdjfIhueUgsowm_bNUm82PsU4pGVow63aO-4rCndOy8evrqr9G3_ljBTL9X9xypIia4yHTrQm4Y9fvUuqLxpz4O7ykaSyxRjgkZGgVg4729HVS7QqAJv1T3zDM6OQ"/>
+                            <img alt="Transparency and accountability visual" className="w-full h-full object-cover grayscale opacity-80 rounded-xl editorial-shadow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7ZaVfQQQGz-1Y-RKjwVVuuPymaqef4Um4ZXa7p73D94nmfENINV6mmac3toLb6TiOWEC9MAoeLQGdoGOCari42OyzhJcAI7Sofmojmxuoi4whOQk8uQVCyNUqBT1_jdOcjv1GRPCfe4EHdPdjfIhueUgsowm_bNUm82PsU4pGVow63aO-4rCndOy8evrqr9G3_ljBTL9X9xypIia4yHTrQm4Y9fvUuqLxpz4O7ykaSyxRjgkZGgVg4729HVS7QqAJv1T3zDM6OQ"/>
                         </div>
                     </div>
                 </section>

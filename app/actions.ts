@@ -7,6 +7,7 @@ import Stripe from 'stripe';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { getAuthEnv, getStripeEnv } from '@/lib/env';
+import { checkRateLimit } from '@/lib/rate-limit';
 import { createSessionToken } from '@/lib/session';
 import { saveBoardImage, saveNewsletterCoverImage, saveProjectImage, saveReportFile, validateBoardImageFile } from '@/lib/upload';
 
@@ -21,6 +22,11 @@ export async function loginAdmin(formData: FormData) {
     const submittedPassword = formData.get('password');
     const password = typeof submittedPassword === 'string' ? submittedPassword : '';
     const { adminPassword, jwtSecret } = getAuthEnv();
+    const authRateLimit = checkRateLimit('auth:login-admin', 10, 60_000);
+
+    if (!authRateLimit.allowed) {
+        return { success: false, error: `Too many login attempts. Try again in ${authRateLimit.retryAfterSeconds}s.` };
+    }
 
     if (!adminPassword || !jwtSecret) {
         return { success: false, error: 'Server misconfiguration. Missing auth environment variables.' };
@@ -57,6 +63,11 @@ export async function subscribeToNewsletter(formData: FormData) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email)) {
         return { success: false, message: 'Please enter a valid email address.' };
+    }
+
+    const subscribeRateLimit = checkRateLimit(`newsletter:subscribe:${email}`, 5, 60_000);
+    if (!subscribeRateLimit.allowed) {
+        return { success: false, message: `Too many requests. Try again in ${subscribeRateLimit.retryAfterSeconds}s.` };
     }
 
     await prisma.subscriber.upsert({
@@ -289,6 +300,11 @@ export async function createCheckoutSession(
         return { success: false, message: 'Please provide a valid donation amount and email.' };
     }
 
+    const checkoutRateLimit = checkRateLimit(`donation:checkout:${donorEmail}`, 5, 60_000);
+    if (!checkoutRateLimit.allowed) {
+        return { success: false, message: `Too many checkout attempts. Try again in ${checkoutRateLimit.retryAfterSeconds}s.` };
+    }
+
     const { stripeSecretKey, siteUrl } = getStripeEnv();
 
     if (!stripeSecretKey) {
@@ -377,6 +393,11 @@ export async function sendInquiry(
     if (!parsed.success) {
         const issue = parsed.error.issues[0]?.message ?? 'Please check your form and try again.';
         return { success: false, message: issue };
+    }
+
+    const inquiryRateLimit = checkRateLimit(`inquiry:submit:${parsed.data.email.toLowerCase()}`, 3, 60_000);
+    if (!inquiryRateLimit.allowed) {
+        return { success: false, message: `Too many messages sent. Try again in ${inquiryRateLimit.retryAfterSeconds}s.` };
     }
 
     await prisma.contactInquiry.create({

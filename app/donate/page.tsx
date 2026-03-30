@@ -46,7 +46,7 @@ export default function DonatePage() {
         <section className="lg:col-span-7 bg-surface-container-lowest rounded-2xl border border-outline-variant/30 p-8 md:p-10 space-y-8">
           <header className="space-y-3">
             <span className="text-xs uppercase tracking-[0.2em] font-bold text-secondary">International Donation Bridge</span>
-            <h1 className="font-headline text-4xl md:text-5xl font-extrabold text-[#1A1A1B]">Fuel Ethiopia's Future</h1>
+            <h1 className="font-headline text-4xl md:text-5xl font-extrabold text-[#1A1A1B]">Fuel Ethiopia&apos;s Future</h1>
             <p className="text-secondary text-lg">Every contribution helps expand access to education, nutrition, and digital opportunity.</p>
           </header>
 
@@ -55,7 +55,7 @@ export default function DonatePage() {
             <p className="font-headline text-3xl font-extrabold text-[#1A1A1B]">15,000 ETB Per Year</p>
             <p className="text-secondary leading-relaxed">
               A full sponsorship of approximately <span className="font-bold text-[#1A1A1B]">$130-$250 USD</span> (depending on exchange rates)
-              covers a student's annual essentials: nutritious meals, school uniform, and books.
+              covers a student&apos;s annual essentials: nutritious meals, school uniform, and books.
             </p>
           </div>
 
@@ -145,7 +145,7 @@ export default function DonatePage() {
             </div>
             <div className="bg-white/80 border border-[#e3dccf] rounded-xl p-4">
               <p className="text-sm uppercase tracking-widest text-secondary font-bold">$250/year (Full)</p>
-              <p className="text-[#1A1A1B] font-semibold">Provides dependable, year-long support for a student's full learning journey.</p>
+              <p className="text-[#1A1A1B] font-semibold">Provides dependable, year-long support for a student&apos;s full learning journey.</p>
             </div>
           </div>
         </aside>
