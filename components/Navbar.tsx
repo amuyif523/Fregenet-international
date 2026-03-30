@@ -15,7 +15,7 @@ export const Navbar = ({ minimal = false }: { minimal?: boolean }) => {
           <nav className="sticky top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl">
               <div className="flex justify-between items-center px-8 py-5 max-w-screen-2xl mx-auto">
                   <Link href="/" className="text-lg font-bold uppercase tracking-widest text-[#1A1A1B]">
-                      Fregenet International
+                      Fregenet Foundation
                   </Link>
                   <div className="hidden md:flex gap-8 items-center">
                       <Link href="/newsletter" className="text-slate-500 hover:text-[#1A1A1B] font-medium transition-all duration-300">Newsletter</Link>
@@ -35,7 +35,7 @@ export const Navbar = ({ minimal = false }: { minimal?: boolean }) => {
       <nav className="sticky top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl font-headline antialiased tracking-tight border-b border-slate-100">
           <div className="flex justify-between items-center px-8 py-5 max-w-screen-2xl mx-auto">
               <Link href="/" className="text-lg font-bold uppercase tracking-widest text-[#1A1A1B] dark:text-slate-100">
-                  Fregenet International
+                  Fregenet Foundation
               </Link>
               <div className="hidden md:flex items-center space-x-8">
                   <Link href="/" className={`${isActive('/') ? 'text-[#98001b] font-bold border-b-2 border-[#98001b] pb-1' : 'text-slate-500 font-medium hover:text-[#be1e2d]'} transition-all duration-300`}>Our Mission</Link>
