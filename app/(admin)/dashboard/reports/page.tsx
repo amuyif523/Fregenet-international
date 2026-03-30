@@ -1,11 +1,11 @@
 'use client'
 
 import { useActionState, useState } from 'react'
-import { uploadReport } from '@/app/actions/upload'
+import { uploadReport } from '@/app/actions'
 import { UploadCloud, FileType } from 'lucide-react'
 
 // Next.js 15 uses useActionState
-const initialState = { message: '', error: '' }
+const initialState = { success: false, message: '' }
 
 export default function UploadReportPage() {
   const [state, formAction, pending] = useActionState(uploadReport, initialState)
@@ -69,8 +69,11 @@ export default function UploadReportPage() {
           </div>
         </div>
         
-        {state?.error && <div className="text-error bg-error-container/20 p-4 rounded-lg text-sm font-bold">{state.error}</div>}
-        {state?.message && <div className="text-[#34A853] bg-[#e6f4ea] p-4 rounded-lg text-sm font-bold">{state.message}</div>}
+        {state?.message && (
+          <div className={`p-4 rounded-lg text-sm font-bold ${state.success ? 'text-[#34A853] bg-[#e6f4ea]' : 'text-error bg-error-container/20'}`}>
+            {state.message}
+          </div>
+        )}
 
         <div className="pt-4 border-t border-outline-variant/30">
           <button 

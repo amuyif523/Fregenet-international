@@ -38,4 +38,5 @@ This checklist captures the minimum pre-deployment validation for the current ba
 
 - [ ] Known blockers recorded (if any).
 - [ ] DB/auth/payment issues documented before deploy.
+- [ ] Production upload storage is configured (`UPLOADS_DIR` and `UPLOADS_PUBLIC_BASE_URL`).
 - [ ] Rollback plan identified (previous working commit/tag).

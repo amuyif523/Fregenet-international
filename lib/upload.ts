@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from 'fs/promises';
 import path from 'path';
+import { getUploadEnv, isProduction } from '@/lib/env';
 
 function sanitizeFileName(fileName: string): string {
   return fileName
@@ -9,8 +10,46 @@ function sanitizeFileName(fileName: string): string {
     .replace(/^-|-$/g, '');
 }
 
+const REPORT_FILE_MAX_SIZE = 15 * 1024 * 1024;
+
+function resolveUploadTarget(subDir: string): { dirPath: string; publicUrlPrefix: string } {
+  const { uploadsDir, uploadsPublicBaseUrl } = getUploadEnv();
+
+  if (uploadsDir && uploadsPublicBaseUrl) {
+    return {
+      dirPath: path.join(uploadsDir, subDir),
+      publicUrlPrefix: `${uploadsPublicBaseUrl.replace(/\/$/, '')}/${subDir}`,
+    };
+  }
+
+  if (isProduction()) {
+    throw new Error('Uploads are not configured for production. Set UPLOADS_DIR and UPLOADS_PUBLIC_BASE_URL.');
+  }
+
+  return {
+    dirPath: path.join(process.cwd(), 'public', subDir),
+    publicUrlPrefix: `/${subDir}`,
+  };
+}
+
+function validatePdfFile(file: File): void {
+  if (file.type !== 'application/pdf') {
+    throw new Error('Only PDF files are accepted.');
+  }
+
+  if (file.size <= 0) {
+    throw new Error('Please upload a non-empty PDF file.');
+  }
+
+  if (file.size > REPORT_FILE_MAX_SIZE) {
+    throw new Error('PDF size must be 15MB or less.');
+  }
+}
+
 export async function saveReportFile(file: File): Promise<string> {
-  const reportsDir = path.join(process.cwd(), 'public', 'reports');
+  validatePdfFile(file);
+
+  const { dirPath: reportsDir, publicUrlPrefix } = resolveUploadTarget('reports');
   await mkdir(reportsDir, { recursive: true });
 
   const safeOriginalName = sanitizeFileName(file.name || 'report.pdf') || 'report.pdf';
@@ -21,7 +60,7 @@ export async function saveReportFile(file: File): Promise<string> {
   const buffer = Buffer.from(await file.arrayBuffer());
   await writeFile(filePath, buffer);
 
-  return `/reports/${fileName}`;
+  return `${publicUrlPrefix}/${fileName}`;
 }
 
 const BOARD_IMAGE_MAX_SIZE = 5 * 1024 * 1024;
@@ -62,7 +101,7 @@ export async function saveBoardImage(file: File, memberName: string): Promise<st
     throw new Error(validation.message);
   }
 
-  const boardDir = path.join(process.cwd(), 'public', 'images', 'board');
+  const { dirPath: boardDir, publicUrlPrefix } = resolveUploadTarget('images/board');
   await mkdir(boardDir, { recursive: true });
 
   const extension = boardImageMimeToExt[file.type];
@@ -74,7 +113,7 @@ export async function saveBoardImage(file: File, memberName: string): Promise<st
   const buffer = Buffer.from(await file.arrayBuffer());
   await writeFile(filePath, buffer);
 
-  return `/images/board/${fileName}`;
+  return `${publicUrlPrefix}/${fileName}`;
 }
 
 export async function saveNewsletterCoverImage(file: File, title: string): Promise<string> {
@@ -83,7 +122,7 @@ export async function saveNewsletterCoverImage(file: File, title: string): Promi
     throw new Error(validation.message);
   }
 
-  const newsletterDir = path.join(process.cwd(), 'public', 'images', 'newsletters');
+  const { dirPath: newsletterDir, publicUrlPrefix } = resolveUploadTarget('images/newsletters');
   await mkdir(newsletterDir, { recursive: true });
 
   const extension = boardImageMimeToExt[file.type];
@@ -95,7 +134,7 @@ export async function saveNewsletterCoverImage(file: File, title: string): Promi
   const buffer = Buffer.from(await file.arrayBuffer());
   await writeFile(filePath, buffer);
 
-  return `/images/newsletters/${fileName}`;
+  return `${publicUrlPrefix}/${fileName}`;
 }
 
 export async function saveProjectImage(file: File, projectTitle: string): Promise<string> {
@@ -104,7 +143,7 @@ export async function saveProjectImage(file: File, projectTitle: string): Promis
     throw new Error(validation.message);
   }
 
-  const projectsDir = path.join(process.cwd(), 'public', 'images', 'projects');
+  const { dirPath: projectsDir, publicUrlPrefix } = resolveUploadTarget('images/projects');
   await mkdir(projectsDir, { recursive: true });
 
   const extension = boardImageMimeToExt[file.type];
@@ -116,5 +155,5 @@ export async function saveProjectImage(file: File, projectTitle: string): Promis
   const buffer = Buffer.from(await file.arrayBuffer());
   await writeFile(filePath, buffer);
 
-  return `/images/projects/${fileName}`;
+  return `${publicUrlPrefix}/${fileName}`;
 }

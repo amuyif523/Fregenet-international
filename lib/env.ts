@@ -11,6 +11,11 @@ type StripeEnv = {
   siteUrl?: string;
 };
 
+type UploadEnv = {
+  uploadsDir?: string;
+  uploadsPublicBaseUrl?: string;
+};
+
 function readEnv(name: string): string | undefined {
   const value = process.env[name];
   if (!value) return undefined;
@@ -50,6 +55,11 @@ export function validateCriticalEnvOnStartup(): void {
     if (missingProd.length > 0) {
       throw new Error(`Missing required production environment variable(s): ${missingProd.join(', ')}`);
     }
+
+    const uploadVars = getUploadEnv();
+    if (!uploadVars.uploadsDir || !uploadVars.uploadsPublicBaseUrl) {
+      throw new Error('Missing required production environment variable(s): UPLOADS_DIR, UPLOADS_PUBLIC_BASE_URL');
+    }
   }
 }
 
@@ -65,5 +75,12 @@ export function getStripeEnv(): StripeEnv {
     stripeSecretKey: readEnv('STRIPE_SECRET_KEY'),
     stripeWebhookSecret: readEnv('STRIPE_WEBHOOK_SECRET'),
     siteUrl: readEnv('NEXT_PUBLIC_SITE_URL'),
+  };
+}
+
+export function getUploadEnv(): UploadEnv {
+  return {
+    uploadsDir: readEnv('UPLOADS_DIR'),
+    uploadsPublicBaseUrl: readEnv('UPLOADS_PUBLIC_BASE_URL'),
   };
 }

@@ -40,6 +40,20 @@ DATABASE_URL="mysql://fregenet_admin:replace-with-url-encoded-password@127.0.0.1
 
 Update your local `.env` so `DATABASE_URL` and `DB_*` values align.
 
+### Upload Storage Configuration
+
+In local development, uploads are written to `public/reports`, `public/images/board`, `public/images/projects`, and `public/images/newsletters`.
+
+In production, set both environment variables below so uploaded files are stored in persistent storage and served from a stable public URL:
+
+```env
+UPLOADS_DIR="/var/www/fregenet-uploads"
+UPLOADS_PUBLIC_BASE_URL="https://cdn.example.org/fregenet"
+```
+
+`UPLOADS_DIR` should point to a writable persistent directory (for example, mounted volume or shared filesystem).
+`UPLOADS_PUBLIC_BASE_URL` should be the public URL prefix that maps to files in `UPLOADS_DIR`.
+
 ### First-Time Setup
 
 Start the isolated database:
