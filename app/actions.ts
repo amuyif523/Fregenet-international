@@ -283,8 +283,9 @@ export async function createCheckoutSession(
 
     const amount = typeof amountValue === 'string' ? Number.parseFloat(amountValue) : NaN;
     const donorEmail = typeof donorEmailValue === 'string' ? donorEmailValue.trim().toLowerCase() : '';
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!Number.isFinite(amount) || amount <= 0 || !donorEmail) {
+    if (!Number.isFinite(amount) || amount <= 0 || amount > 100000 || !emailRegex.test(donorEmail)) {
         return { success: false, message: 'Please provide a valid donation amount and email.' };
     }
 
@@ -294,8 +295,18 @@ export async function createCheckoutSession(
         return { success: false, message: 'Stripe is not configured yet.' };
     }
 
+    if (!siteUrl) {
+        return { success: false, message: 'Donation checkout is not configured yet. Please contact support.' };
+    }
+
+    let baseUrl: string;
+    try {
+        baseUrl = new URL(siteUrl).origin;
+    } catch {
+        return { success: false, message: 'Donation checkout is temporarily unavailable due to server configuration.' };
+    }
+
     const stripe = new Stripe(stripeSecretKey);
-    const baseUrl = siteUrl ?? 'http://localhost:3000';
     const amountInCents = Math.round(amount * 100);
 
     let session: Stripe.Checkout.Session;
@@ -306,6 +317,10 @@ export async function createCheckoutSession(
             customer_email: donorEmail,
             success_url: `${baseUrl}/donate?success=1`,
             cancel_url: `${baseUrl}/donate?canceled=1`,
+            metadata: {
+                donorEmail,
+                amountInCents: amountInCents.toString(),
+            },
             line_items: [
                 {
                     quantity: 1,
