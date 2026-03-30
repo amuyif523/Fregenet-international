@@ -44,7 +44,7 @@ model Report {
 }
 
 model Subscriber {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   email     String   @unique
   status    String   @default("active")
   createdAt DateTime @default(now())

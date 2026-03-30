@@ -74,9 +74,9 @@ export async function deleteSubscriber(
     formData: FormData
 ): Promise<DeleteActionState> {
     const rawId = formData.get('id');
-    const id = typeof rawId === 'string' ? Number.parseInt(rawId, 10) : NaN;
+    const id = typeof rawId === 'string' ? rawId.trim() : '';
 
-    if (!Number.isFinite(id)) {
+    if (!id) {
         return { success: false, message: 'Invalid subscriber id.' };
     }
 
