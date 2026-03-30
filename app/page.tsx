@@ -11,7 +11,7 @@ export default function Home() {
                 {/* Hero Section */}
                 <section className="relative min-h-[870px] flex items-center overflow-hidden">
                     <div className="absolute inset-0 z-0">
-                        <img alt="Students learning" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8YvsFCMnwg4s7RweNDHKOhVDmSFlAgvKi6zoutSNoPELc8JB2MvMmzD-8CoVMdN0IiT7q6VaDQTn-xiaEzL77h8gwV72QPZaaejO3EVXUoE4lAUtttuz0JFCj0zpp0LW94vRLJOqm9sGjRUddbVedDq8Cssr6T1_IqzFg2cGpES2IfFDiy0eYkIMt3u2VheIn0vYyo8vAbBXtjkvFkH6qZxKesTK1dvBBKW4RWbG_KWp8mJtO0jHA6IeZFyYUFMFjxxZYkcfAnQ"/>
+                        <img alt="Students learning" className="w-full h-full object-cover" src="/images/home-hero.jpg"/>
                         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/35 to-transparent" />
                         <div className="absolute inset-0 hero-gradient" />
                     </div>
