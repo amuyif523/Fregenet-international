@@ -137,3 +137,8 @@ Authenticated redirect check:
 - Use `npx prisma db push` so the database matches `prisma/schema.prisma`.
 - The MariaDB data is stored in the Docker volume `fregenet_data`.
 - The container is bound to `127.0.0.1:3307`, so it is only exposed locally.
+
+## Production Go-Live (Sprint 9)
+
+- Runbook: `SPRINT9_HAHUCLOUD_GO_LIVE.md`
+- Smoke script: `bash scripts/go-live-smoke.sh https://your-domain.example`

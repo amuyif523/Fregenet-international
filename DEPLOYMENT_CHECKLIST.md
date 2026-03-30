@@ -41,3 +41,14 @@ This checklist captures the minimum pre-deployment validation for the current ba
 - [ ] DB/auth/payment issues documented before deploy.
 - [ ] Production upload storage is configured (`UPLOADS_DIR` and `UPLOADS_PUBLIC_BASE_URL`).
 - [ ] Rollback plan identified (previous working commit/tag).
+
+## 6. Sprint 9 Go-Live (HahuCloud)
+
+- [ ] HahuCloud runtime configured (`npm ci && npm run build`, `npm run start`).
+- [ ] Production env vars set (`DATABASE_URL`, `JWT_SECRET`, `ADMIN_PASSWORD`, `STRIPE_*`, `NEXT_PUBLIC_SITE_URL`, `UPLOADS_*`).
+- [ ] Domain and SSL active over HTTPS.
+- [ ] Stripe webhook configured for `/api/webhooks/stripe` with required events.
+- [ ] Public and admin smoke checks passed (`bash scripts/go-live-smoke.sh https://<domain>`).
+- [ ] Donation + webhook state transition verified in production.
+- [ ] Upload asset path verified from cloud/public upload URL.
+- [ ] Final QA signoff recorded in `SPRINT9_HAHUCLOUD_GO_LIVE.md`.
