@@ -3,7 +3,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
+import { DatabaseUnavailableNotice } from '@/components/DatabaseUnavailableNotice';
 import { prisma } from '@/lib/prisma';
+import { safeDbQuery } from '@/lib/safe-db';
 
 export const metadata: Metadata = {
   title: 'Newsletter | Fregenet International',
@@ -13,9 +15,14 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function NewsletterPage() {
-  const newsletters = await prisma.newsletter.findMany({
-    orderBy: { publishedAt: 'desc' },
-  });
+  const { data: newsletters, unavailable } = await safeDbQuery(
+    'newsletters',
+    () =>
+      prisma.newsletter.findMany({
+        orderBy: { publishedAt: 'desc' },
+      }),
+    []
+  );
 
   return (
     <div>
@@ -89,17 +96,17 @@ export default async function NewsletterPage() {
           </div>
 
           {newsletters.length === 0 ? (
-            <div className="mx-auto mt-8 max-w-screen-2xl rounded-2xl border border-dashed border-outline-variant/40 bg-surface-container-lowest px-6 py-12 text-center">
-              <p className="font-headline text-3xl font-extrabold text-[#1A1A1B]">Archives Coming Soon</p>
-              <p className="mx-auto mt-3 max-w-2xl text-secondary">
-                We are preparing our first public newsletter editions. Check back soon for updates and impact stories.
-              </p>
-              <Link
-                href="/"
-                className="mt-6 inline-flex rounded-lg bg-[#0b6f77] px-5 py-3 text-sm font-bold uppercase tracking-wider text-white transition-colors hover:bg-[#095961]"
-              >
-                Back to Mission
-              </Link>
+            <div className="mx-auto mt-8 max-w-screen-2xl">
+              <DatabaseUnavailableNotice
+                title={unavailable ? 'Newsletter archive temporarily unavailable' : 'Archives Coming Soon'}
+                message={
+                  unavailable
+                    ? 'Newsletter entries are temporarily unavailable while the site reconnects to the database.'
+                    : 'We are preparing our first public newsletter editions. Check back soon for updates and impact stories.'
+                }
+                actionHref="/"
+                actionLabel="Back to Mission"
+              />
             </div>
           ) : null}
         </section>

@@ -1,12 +1,18 @@
 import { prisma } from '@/lib/prisma';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
+import { DatabaseUnavailableNotice } from '@/components/DatabaseUnavailableNotice';
+import { safeDbQuery } from '@/lib/safe-db';
 import type { Report } from '@/prisma/generated/client';
 
 export const dynamic = 'force-dynamic';
 
 export default async function TransparencyPage() {
-    const reports = await prisma.report.findMany({ orderBy: { year: 'desc' } });
+    const { data: reports, unavailable } = await safeDbQuery(
+        'reports',
+        () => prisma.report.findMany({ orderBy: { year: 'desc' } }),
+        [] as Report[]
+    );
 
     return (
         <div>
@@ -31,25 +37,36 @@ export default async function TransparencyPage() {
                 <section className="bg-surface py-24 px-8 max-w-screen-2xl mx-auto">
                     <h2 className="font-headline text-3xl font-bold mb-12">Annual Reports</h2>
                     <div className="space-y-4">
-                        {reports.map((report: Report) => (
-                            <div key={report.id} className="group flex flex-col md:flex-row md:items-center justify-between p-8 bg-surface-container-lowest border border-transparent hover:border-outline-variant/30 rounded-xl transition-all duration-500 editorial-shadow">
-                                <div className="flex items-center gap-8">
-                                    <span className="text-6xl font-headline font-black text-surface-container-highest group-hover:text-primary-container/20">{report.year}</span>
-                                    <div>
-                                        <h3 className="text-xl font-bold">{report.title}</h3>
-                                        <p className="text-secondary text-sm">{report.category} • Audited Financial Statements • IRS Form 990</p>
+                        {reports.length > 0 ? (
+                            reports.map((report: Report) => (
+                                <div key={report.id} className="group flex flex-col md:flex-row md:items-center justify-between p-8 bg-surface-container-lowest border border-transparent hover:border-outline-variant/30 rounded-xl transition-all duration-500 editorial-shadow">
+                                    <div className="flex items-center gap-8">
+                                        <span className="text-6xl font-headline font-black text-surface-container-highest group-hover:text-primary-container/20">{report.year}</span>
+                                        <div>
+                                            <h3 className="text-xl font-bold">{report.title}</h3>
+                                            <p className="text-secondary text-sm">{report.category} • Audited Financial Statements • IRS Form 990</p>
+                                        </div>
+                                    </div>
+                                    <div className="mt-4 md:mt-0 flex flex-col items-start md:items-end gap-3">
+                                        {report.isVerified ? (
+                                            <span className="px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-gradient-to-r from-amber-200 to-teal-200 text-teal-950 border border-amber-300">
+                                                IFRS 18 Certified
+                                            </span>
+                                        ) : null}
+                                        <a href={report.fileUrl} target="_blank" rel="noopener noreferrer" className="bg-primary-container text-white px-8 py-4 rounded-lg font-bold uppercase text-xs inline-block text-center">Download PDF</a>
                                     </div>
                                 </div>
-                                <div className="mt-4 md:mt-0 flex flex-col items-start md:items-end gap-3">
-                                    {report.isVerified ? (
-                                        <span className="px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-gradient-to-r from-amber-200 to-teal-200 text-teal-950 border border-amber-300">
-                                            IFRS 18 Certified
-                                        </span>
-                                    ) : null}
-                                    <a href={report.fileUrl} target="_blank" rel="noopener noreferrer" className="bg-primary-container text-white px-8 py-4 rounded-lg font-bold uppercase text-xs inline-block text-center">Download PDF</a>
-                                </div>
-                            </div>
-                        ))}
+                            ))
+                        ) : (
+                            <DatabaseUnavailableNotice
+                                title={unavailable ? 'Reports temporarily unavailable' : 'Reports coming soon'}
+                                message={
+                                    unavailable
+                                        ? 'Annual reports are temporarily unavailable while the site reconnects to the database.'
+                                        : 'Published reports will appear here once they have been uploaded.'
+                                }
+                            />
+                        )}
                     </div>
                 </section>
             </main>

@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { prisma } from '@/lib/prisma';
+import { safeDbQuery } from '@/lib/safe-db';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,10 +21,15 @@ function looksLikeHtml(value: string): boolean {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
 
-  const newsletter = await prisma.newsletter.findUnique({
-    where: { slug },
-    select: { title: true, excerpt: true },
-  });
+  const { data: newsletter } = await safeDbQuery(
+    `newsletter metadata for ${slug}`,
+    () =>
+      prisma.newsletter.findUnique({
+        where: { slug },
+        select: { title: true, excerpt: true },
+      }),
+    null
+  );
 
   if (!newsletter) {
     return {
@@ -45,9 +51,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function NewsletterDetailPage({ params }: PageProps) {
   const { slug } = await params;
 
-  const newsletter = await prisma.newsletter.findUnique({
-    where: { slug },
-  });
+  const { data: newsletter } = await safeDbQuery(
+    `newsletter ${slug}`,
+    () =>
+      prisma.newsletter.findUnique({
+        where: { slug },
+      }),
+    null
+  );
 
   if (!newsletter) {
     notFound();

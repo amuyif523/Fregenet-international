@@ -2,13 +2,23 @@ import { prisma } from '@/lib/prisma';
 import Image from 'next/image';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
+import { DatabaseUnavailableNotice } from '@/components/DatabaseUnavailableNotice';
 import { ShieldCheck } from 'lucide-react';
 import type { BoardMember } from '@/prisma/generated/client';
+import { safeDbQuery } from '@/lib/safe-db';
 
 export const dynamic = 'force-dynamic';
 
+async function getBoardMembers() {
+    return safeDbQuery(
+        'board members',
+        () => prisma.boardMember.findMany({ orderBy: { sortOrder: 'asc' } }),
+        [] as BoardMember[]
+    );
+}
+
 export default async function GovernancePage() {
-    const boardMembers = await prisma.boardMember.findMany({ orderBy: { sortOrder: 'asc' } });
+    const { data: boardMembers, unavailable } = await getBoardMembers();
 
     return (
         <div className="bg-surface">
@@ -41,27 +51,38 @@ export default async function GovernancePage() {
                     </div>
                 </section>
                 <section className="py-24 px-8 max-w-screen-2xl mx-auto">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                        {boardMembers.map((member: BoardMember) => {
-                            const avatarUrl = member.imageUrl?.startsWith('/') ? member.imageUrl : '/images/board/placeholder.svg';
-                            return (
-                                <div key={member.id} className="group flex flex-col h-full bg-surface-container-lowest p-6 rounded-xl editorial-shadow hover:-translate-y-2 transition-all">
-                                    <div className="relative mb-4 aspect-[4/5] w-full overflow-hidden rounded-lg">
-                                        <Image
-                                            src={avatarUrl}
-                                            alt={member.name}
-                                            fill
-                                            sizes="(min-width: 768px) 25vw, 100vw"
-                                            className="object-cover grayscale transition-all group-hover:grayscale-0"
-                                        />
+                    {boardMembers.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                            {boardMembers.map((member: BoardMember) => {
+                                const avatarUrl = member.imageUrl?.startsWith('/') ? member.imageUrl : '/images/board/placeholder.svg';
+                                return (
+                                    <div key={member.id} className="group flex flex-col h-full bg-surface-container-lowest p-6 rounded-xl editorial-shadow hover:-translate-y-2 transition-all">
+                                        <div className="relative mb-4 aspect-[4/5] w-full overflow-hidden rounded-lg">
+                                            <Image
+                                                src={avatarUrl}
+                                                alt={member.name}
+                                                fill
+                                                sizes="(min-width: 768px) 25vw, 100vw"
+                                                className="object-cover grayscale transition-all group-hover:grayscale-0"
+                                            />
+                                        </div>
+                                        <h3 className="font-bold text-xl text-[#1A1A1B]">{member.name}</h3>
+                                        <p className="text-primary font-bold text-xs uppercase tracking-widest mb-3">{member.role}</p>
+                                        <p className="text-secondary text-sm mt-auto flex-1">{member.bio}</p>
                                     </div>
-                                    <h3 className="font-bold text-xl text-[#1A1A1B]">{member.name}</h3>
-                                    <p className="text-primary font-bold text-xs uppercase tracking-widest mb-3">{member.role}</p>
-                                    <p className="text-secondary text-sm mt-auto flex-1">{member.bio}</p>
-                                </div>
-                            );
-                        })}
-                    </div>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <DatabaseUnavailableNotice
+                            title={unavailable ? 'Board directory temporarily unavailable' : 'Board profiles coming soon'}
+                            message={
+                                unavailable
+                                    ? 'Board member profiles are temporarily unavailable while the site reconnects to the database.'
+                                    : 'Board member profiles will appear here once they have been published.'
+                            }
+                        />
+                    )}
                 </section>
             </main>
             <Footer />
