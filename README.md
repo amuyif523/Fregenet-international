@@ -12,18 +12,33 @@ Database details:
 Container: fregenet-itl-db
 Host: 127.0.0.1
 Port: 3307
-Database: fregenet_international_db
-User: fregenet_admin
-Password: FrgITL!Db2026_x7Qm
+Database: set via DB_NAME (default: fregenet_international_db)
+User: set via DB_USER (default: fregenet_admin)
+Password: set via DB_PASSWORD (required for real environments)
 ```
 
-The expected local connection string is:
+Set these values in your local `.env` before running Docker:
 
 ```env
-DATABASE_URL="mysql://fregenet_admin:FrgITL%21Db2026_x7Qm@127.0.0.1:3307/fregenet_international_db"
+DB_NAME="fregenet_international_db"
+DB_USER="fregenet_admin"
+DB_PASSWORD="replace-with-strong-db-password"
+DB_ROOT_PASSWORD="replace-with-strong-root-password"
 ```
 
-Update your local `.env` so `DATABASE_URL` matches the value above. Leave the other env vars in `.env` unchanged.
+Then set `DATABASE_URL` to match those values:
+
+```env
+DATABASE_URL="mysql://DB_USER:DB_PASSWORD@127.0.0.1:3307/DB_NAME"
+```
+
+Example (with URL-encoded password characters):
+
+```env
+DATABASE_URL="mysql://fregenet_admin:replace-with-url-encoded-password@127.0.0.1:3307/fregenet_international_db"
+```
+
+Update your local `.env` so `DATABASE_URL` and `DB_*` values align.
 
 ### First-Time Setup
 
