@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
+import { DatabaseUnavailableNotice } from '@/components/DatabaseUnavailableNotice';
+import { safeDbQuery } from '@/lib/safe-db';
 import NewsletterForm from '../_components/NewsletterForm';
 
 export const dynamic = 'force-dynamic';
@@ -16,9 +18,20 @@ type PageProps = {
 export default async function EditNewsletterPage({ params }: PageProps) {
   const { id } = await params;
 
-  const newsletter = await prisma.newsletter.findUnique({
-    where: { id },
-  });
+  const { data: newsletter, unavailable } = await safeDbQuery(
+    `newsletter ${id}`,
+    () =>
+      prisma.newsletter.findUnique({
+        where: { id },
+      }),
+    null
+  );
+
+  if (unavailable) {
+    return (
+      <DatabaseUnavailableNotice message="This newsletter could not be loaded because the admin panel is temporarily disconnected from the database." />
+    );
+  }
 
   if (!newsletter) {
     notFound();

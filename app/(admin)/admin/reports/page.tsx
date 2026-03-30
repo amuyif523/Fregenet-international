@@ -1,12 +1,19 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
+import { DatabaseUnavailableNotice } from '@/components/DatabaseUnavailableNotice';
+import { safeDbQuery } from '@/lib/safe-db';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ReportsPage() {
-  const reports = await prisma.report.findMany({
-    orderBy: [{ year: 'desc' }, { createdAt: 'desc' }],
-  });
+  const { data: reports, unavailable } = await safeDbQuery(
+    'admin reports',
+    () =>
+      prisma.report.findMany({
+        orderBy: [{ year: 'desc' }, { createdAt: 'desc' }],
+      }),
+    []
+  );
 
   return (
     <div className="space-y-8">
@@ -23,6 +30,9 @@ export default async function ReportsPage() {
         </Link>
       </header>
 
+      {unavailable ? (
+        <DatabaseUnavailableNotice message="Report records are temporarily unavailable while the admin panel reconnects to the database." />
+      ) : (
       <div className="bg-surface-container-lowest rounded-xl border border-outline-variant/30 overflow-hidden">
         <table className="w-full text-left text-sm">
           <thead className="bg-surface-container">
@@ -63,6 +73,7 @@ export default async function ReportsPage() {
 
         {reports.length === 0 ? <div className="px-6 py-8 text-secondary">No reports uploaded yet.</div> : null}
       </div>
+      )}
     </div>
   );
 }

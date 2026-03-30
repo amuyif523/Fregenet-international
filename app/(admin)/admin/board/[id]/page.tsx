@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
+import { DatabaseUnavailableNotice } from '@/components/DatabaseUnavailableNotice';
+import { safeDbQuery } from '@/lib/safe-db';
 import BoardMemberForm from '../_components/BoardMemberForm';
 
 export const dynamic = 'force-dynamic';
@@ -11,9 +13,20 @@ type PageProps = {
 export default async function EditBoardMemberPage({ params }: PageProps) {
   const { id } = await params;
 
-  const member = await prisma.boardMember.findUnique({
-    where: { id },
-  });
+  const { data: member, unavailable } = await safeDbQuery(
+    `board member ${id}`,
+    () =>
+      prisma.boardMember.findUnique({
+        where: { id },
+      }),
+    null
+  );
+
+  if (unavailable) {
+    return (
+      <DatabaseUnavailableNotice message="This board member could not be loaded because the admin panel is temporarily disconnected from the database." />
+    );
+  }
 
   if (!member) {
     notFound();

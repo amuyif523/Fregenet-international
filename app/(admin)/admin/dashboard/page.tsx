@@ -1,16 +1,24 @@
 import Link from 'next/link';
 import { Users, BriefcaseBusiness, FolderKanban, FileText } from 'lucide-react';
 import { prisma } from '@/lib/prisma';
+import { DatabaseUnavailableNotice } from '@/components/DatabaseUnavailableNotice';
+import { safeDbQuery } from '@/lib/safe-db';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboardPage() {
-  const [subscriberCount, boardMemberCount, projectCount, reportCount] = await Promise.all([
-    prisma.subscriber.count(),
-    prisma.boardMember.count(),
-    prisma.project.count(),
-    prisma.report.count(),
-  ]);
+  const { data: counts, unavailable } = await safeDbQuery(
+    'admin dashboard metrics',
+    () =>
+      Promise.all([
+        prisma.subscriber.count(),
+        prisma.boardMember.count(),
+        prisma.project.count(),
+        prisma.report.count(),
+      ]),
+    [0, 0, 0, 0] as [number, number, number, number]
+  );
+  const [subscriberCount, boardMemberCount, projectCount, reportCount] = counts;
 
   return (
     <div className="space-y-10">
@@ -18,6 +26,10 @@ export default async function AdminDashboardPage() {
         <h1 className="font-headline text-4xl font-extrabold text-[#1A1A1B]">Welcome to Fregenet Admin</h1>
         <p className="text-secondary">Use the sidebar to manage core platform records.</p>
       </header>
+
+      {unavailable ? (
+        <DatabaseUnavailableNotice message="Dashboard metrics are temporarily unavailable while the admin panel reconnects to the database." />
+      ) : null}
 
       <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         <Link href="/admin/subscribers" className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/30 hover:-translate-y-1 transition-transform">

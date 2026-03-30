@@ -1,13 +1,20 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
+import { DatabaseUnavailableNotice } from '@/components/DatabaseUnavailableNotice';
+import { safeDbQuery } from '@/lib/safe-db';
 import BoardMembersTable from './_components/BoardMembersTable';
 
 export const dynamic = 'force-dynamic';
 
 export default async function BoardMembersPage() {
-  const boardMembers = await prisma.boardMember.findMany({
-    orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
-  });
+  const { data: boardMembers, unavailable } = await safeDbQuery(
+    'admin board members',
+    () =>
+      prisma.boardMember.findMany({
+        orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
+      }),
+    []
+  );
 
   return (
     <div className="space-y-8">
@@ -24,7 +31,11 @@ export default async function BoardMembersPage() {
         </Link>
       </header>
 
-      <BoardMembersTable boardMembers={boardMembers} />
+      {unavailable ? (
+        <DatabaseUnavailableNotice message="Board member records are temporarily unavailable while the admin panel reconnects to the database." />
+      ) : (
+        <BoardMembersTable boardMembers={boardMembers} />
+      )}
     </div>
   );
 }

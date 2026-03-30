@@ -1,14 +1,21 @@
 import Link from 'next/link';
 import { Pencil } from 'lucide-react';
 import { prisma } from '@/lib/prisma';
+import { DatabaseUnavailableNotice } from '@/components/DatabaseUnavailableNotice';
 import { deleteProject } from '@/app/actions';
+import { safeDbQuery } from '@/lib/safe-db';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminProjectsPage() {
-  const projects = await prisma.project.findMany({
-    orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
-  });
+  const { data: projects, unavailable } = await safeDbQuery(
+    'admin projects',
+    () =>
+      prisma.project.findMany({
+        orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
+      }),
+    []
+  );
 
   return (
     <div className="space-y-8">
@@ -25,6 +32,9 @@ export default async function AdminProjectsPage() {
         </Link>
       </header>
 
+      {unavailable ? (
+        <DatabaseUnavailableNotice message="Project records are temporarily unavailable while the admin panel reconnects to the database." />
+      ) : (
       <div className="bg-surface-container-lowest rounded-xl border border-outline-variant/30 overflow-hidden">
         <table className="w-full text-left text-sm">
           <thead className="bg-surface-container">
@@ -75,6 +85,7 @@ export default async function AdminProjectsPage() {
           <div className="px-6 py-8 text-secondary">No projects yet. Add your first project.</div>
         ) : null}
       </div>
+      )}
     </div>
   );
 }

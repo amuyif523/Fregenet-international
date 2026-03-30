@@ -1,13 +1,20 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
+import { DatabaseUnavailableNotice } from '@/components/DatabaseUnavailableNotice';
+import { safeDbQuery } from '@/lib/safe-db';
 import NewslettersTable from './_components/NewslettersTable';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminNewslettersPage() {
-  const newsletters = await prisma.newsletter.findMany({
-    orderBy: { publishedAt: 'desc' },
-  });
+  const { data: newsletters, unavailable } = await safeDbQuery(
+    'admin newsletters',
+    () =>
+      prisma.newsletter.findMany({
+        orderBy: { publishedAt: 'desc' },
+      }),
+    []
+  );
 
   return (
     <div className="space-y-8">
@@ -24,7 +31,11 @@ export default async function AdminNewslettersPage() {
         </Link>
       </header>
 
-      <NewslettersTable newsletters={newsletters} />
+      {unavailable ? (
+        <DatabaseUnavailableNotice message="Newsletter records are temporarily unavailable while the admin panel reconnects to the database." />
+      ) : (
+        <NewslettersTable newsletters={newsletters} />
+      )}
     </div>
   );
 }

@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
+import { DatabaseUnavailableNotice } from '@/components/DatabaseUnavailableNotice';
+import { safeDbQuery } from '@/lib/safe-db';
 import ProjectForm from '../_components/ProjectForm';
 
 export const dynamic = 'force-dynamic';
@@ -11,9 +13,20 @@ type PageProps = {
 export default async function EditProjectPage({ params }: PageProps) {
   const { id } = await params;
 
-  const project = await prisma.project.findUnique({
-    where: { id },
-  });
+  const { data: project, unavailable } = await safeDbQuery(
+    `project ${id}`,
+    () =>
+      prisma.project.findUnique({
+        where: { id },
+      }),
+    null
+  );
+
+  if (unavailable) {
+    return (
+      <DatabaseUnavailableNotice message="This project could not be loaded because the admin panel is temporarily disconnected from the database." />
+    );
+  }
 
   if (!project) {
     notFound();
