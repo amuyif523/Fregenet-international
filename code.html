@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Fregenet International | Empowering Ethiopian Leaders</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "on-secondary-fixed-variant": "#474647",
+                "surface-container-highest": "#e2e2e2",
+                "on-primary": "#ffffff",
+                "tertiary-fixed-dim": "#85d1ef",
+                "on-tertiary-fixed-variant": "#004d62",
+                "tertiary-fixed": "#baeaff",
+                "on-primary-fixed": "#410006",
+                "outline-variant": "#e3bebb",
+                "on-background": "#1a1c1c",
+                "on-error-container": "#93000a",
+                "surface-dim": "#dadada",
+                "on-secondary-fixed": "#1b1b1c",
+                "on-primary-fixed-variant": "#930019",
+                "primary-fixed": "#ffdad8",
+                "on-tertiary": "#ffffff",
+                "on-primary-container": "#ffd3d1",
+                "background": "#f9f9f9",
+                "inverse-primary": "#ffb3b0",
+                "surface-tint": "#b91a2a",
+                "secondary-fixed": "#e5e2e3",
+                "secondary-container": "#e2dfe0",
+                "primary-container": "#be1e2d",
+                "on-tertiary-container": "#abe6ff",
+                "on-secondary": "#ffffff",
+                "tertiary": "#005066",
+                "outline": "#8f6f6e",
+                "surface-container-high": "#e8e8e8",
+                "on-tertiary-fixed": "#001f29",
+                "surface-container-low": "#f3f3f3",
+                "error-container": "#ffdad6",
+                "on-surface-variant": "#5b403f",
+                "surface-container": "#eeeeee",
+                "secondary-fixed-dim": "#c8c6c7",
+                "primary-fixed-dim": "#ffb3b0",
+                "primary": "#98001b",
+                "on-surface": "#1a1c1c",
+                "surface-bright": "#f9f9f9",
+                "surface-container-lowest": "#ffffff",
+                "surface": "#f9f9f9",
+                "error": "#ba1a1a",
+                "surface-variant": "#e2e2e2",
+                "secondary": "#5f5e5f",
+                "inverse-on-surface": "#f1f1f1",
+                "tertiary-container": "#006a85",
+                "on-error": "#ffffff",
+                "on-secondary-container": "#636263",
+                "inverse-surface": "#2f3131"
+              },
+              fontFamily: {
+                "headline": ["Public Sans"],
+                "body": ["Inter"],
+                "label": ["Inter"]
+              },
+              borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+            },
+          },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .hero-gradient {
+            background: linear-gradient(to bottom, rgba(249, 249, 249, 0) 60%, rgba(249, 249, 249, 1) 100%);
+        }
+        .editorial-shadow {
+            box-shadow: 0 20px 40px rgba(26, 28, 28, 0.04);
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+    <div id="root"></div>
+
+    <!-- React and related libraries -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/history@5/umd/history.development.js"></script>
+    <script src="https://unpkg.com/react-router@6.3.0/umd/react-router.development.js"></script>
+    <script src="https://unpkg.com/react-router-dom@6.3.0/umd/react-router-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { createRoot } = ReactDOM;
+        const { MemoryRouter, Routes, Route, Link, useNavigate, useLocation } = ReactRouterDOM;
+
+        // --- Shared Components ---
+
+        const Navbar = ({ minimal = false }) => {
+            const navigate = useNavigate();
+            const location = useLocation();
+            
+            const isActive = (path) => location.pathname === path;
+
+            if (minimal) {
+                return (
+                    <nav className="sticky top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl">
+                        <div className="flex justify-between items-center px-8 py-5 max-w-screen-2xl mx-auto">
+                            <Link to="/" className="text-lg font-bold uppercase tracking-widest text-[#1A1A1B]">
+                                Fregenet International
+                            </Link>
+                            <div className="hidden md:flex gap-8 items-center">
+                                <Link to="/projects" className="text-slate-500 hover:text-[#1A1A1B] font-medium transition-all duration-300">Back to Projects</Link>
+                                <span className="bg-slate-100 h-px w-8 hidden lg:block"></span>
+                                <div className="flex items-center gap-2 text-primary font-bold">
+                                    <span className="material-symbols-outlined text-sm">lock</span>
+                                    <span className="text-sm uppercase tracking-wider">Secure Checkout</span>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                );
+            }
+
+            return (
+                <nav className="sticky top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl font-['Public_Sans'] antialiased tracking-tight border-b border-slate-100">
+                    <div className="flex justify-between items-center px-8 py-5 max-w-screen-2xl mx-auto">
+                        <Link to="/" className="text-lg font-bold uppercase tracking-widest text-[#1A1A1B] dark:text-slate-100">
+                            Fregenet International
+                        </Link>
+                        <div className="hidden md:flex items-center space-x-8">
+                            <Link to="/" className={`${isActive('/') ? 'text-[#98001b] font-bold border-b-2 border-[#98001b] pb-1' : 'text-slate-500 font-medium hover:text-[#be1e2d]'} transition-all duration-300`}>Our Mission</Link>
+                            <Link to="/projects" className={`${isActive('/projects') ? 'text-[#98001b] font-bold border-b-2 border-[#98001b] pb-1' : 'text-slate-500 font-medium hover:text-[#be1e2d]'} transition-all duration-300`}>Projects</Link>
+                            <Link to="/governance" className={`${isActive('/governance') ? 'text-[#98001b] font-bold border-b-2 border-[#98001b] pb-1' : 'text-slate-500 font-medium hover:text-[#be1e2d]'} transition-all duration-300`}>Governance</Link>
+                            <Link to="/transparency" className={`${isActive('/transparency') ? 'text-[#98001b] font-bold border-b-2 border-[#98001b] pb-1' : 'text-slate-500 font-medium hover:text-[#be1e2d]'} transition-all duration-300`}>Transparency</Link>
+                        </div>
+                        <button onClick={() => navigate('/donate')} className="bg-primary text-on-primary px-6 py-2 rounded-lg font-bold text-xs tracking-widest uppercase hover:bg-primary-container transition-all duration-300 transform hover:-translate-y-1">
+                            Donate
+                        </button>
+                    </div>
+                </nav>
+            );
+        };
+
+        const Footer = () => (
+            <footer className="bg-[#f3f3f3] dark:bg-slate-950 font-['Inter'] leading-relaxed text-sm">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-12 px-12 py-20 max-w-screen-2xl mx-auto">
+                    <div>
+                        <div className="text-base font-bold text-[#1A1A1B] dark:text-white mb-6">Fregenet International</div>
+                        <p className="text-slate-500 dark:text-slate-400 mb-6">Building a sustainable future through education, nutrition, and technological empowerment for the children of Ethiopia.</p>
+                        <div className="flex gap-4 text-secondary">
+                            <span className="material-symbols-outlined hover:text-primary cursor-pointer">public</span>
+                            <span className="material-symbols-outlined hover:text-primary cursor-pointer">alternate_email</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 className="font-bold text-[#1A1A1B] dark:text-white mb-6 uppercase tracking-widest text-xs">Impact</h4>
+                        <ul className="space-y-4">
+                            <li><Link to="/transparency" className="text-slate-500 dark:text-slate-400 hover:text-[#1A1A1B]">Annual Reports</Link></li>
+                            <li><Link to="/transparency" className="text-slate-500 dark:text-slate-400 hover:text-[#1A1A1B]">Transparency</Link></li>
+                            <li><Link to="/projects" className="text-slate-500 dark:text-slate-400 hover:text-[#1A1A1B]">Global Impact</Link></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 className="font-bold text-[#1A1A1B] dark:text-white mb-6 uppercase tracking-widest text-xs">About Us</h4>
+                        <ul className="space-y-4">
+                            <li><Link to="/governance" className="text-slate-500 dark:text-slate-400 hover:text-[#1A1A1B]">Our Team</Link></li>
+                            <li><a href="#" className="text-slate-500 dark:text-slate-400 hover:text-[#1A1A1B]">Contact Us</a></li>
+                            <li><a href="#" className="text-slate-500 dark:text-slate-400 hover:text-[#1A1A1B]">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 className="font-bold text-[#1A1A1B] dark:text-white mb-6 uppercase tracking-widest text-xs">Newsletter</h4>
+                        <p className="text-slate-500 dark:text-slate-400 mb-4">Stay updated on our impact.</p>
+                        <div className="flex">
+                            <input className="bg-white border-none text-sm px-4 py-2 w-full focus:ring-1 focus:ring-primary rounded-l" placeholder="Email address" type="email"/>
+                            <button className="bg-primary text-white px-4 py-2 rounded-r hover:bg-primary-container transition-colors">
+                                <span className="material-symbols-outlined align-middle">send</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div className="bg-slate-200 dark:bg-slate-800 h-px w-full"></div>
+                <div className="py-8 text-center text-slate-500 dark:text-slate-400 text-xs">
+                    © 2024 Fregenet International. All rights reserved.
+                </div>
+            </footer>
+        );
+
+        // --- Page Components ---
+
+        const HomePage = () => {
+            const navigate = useNavigate();
+            return (
+                <div>
+                    <Navbar />
+                    <main>
+                        {/* Hero Section */}
+                        <section className="relative min-h-[870px] flex items-center overflow-hidden">
+                            <div className="absolute inset-0 z-0">
+                                <img alt="Students learning" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8YvsFCMnwg4s7RweNDHKOhVDmSFlAgvKi6zoutSNoPELc8JB2MvMmzD-8CoVMdN0IiT7q6VaDQTn-xiaEzL77h8gwV72QPZaaejO3EVXUoE4lAUtttuz0JFCj0zpp0LW94vRLJOqm9sGjRUddbVedDq8Cssr6T1_IqzFg2cGpES2IfFDiy0eYkIMt3u2VheIn0vYyo8vAbBXtjkvFkH6qZxKesTK1dvBBKW4RWbG_KWp8mJtO0jHA6IeZFyYUFMFjxxZYkcfAnQ"/>
+                                <div className="absolute inset-0 bg-white/20 hero-gradient"></div>
+                            </div>
+                            <div className="relative z-10 max-w-screen-2xl mx-auto px-8 w-full">
+                                <div className="max-w-3xl">
+                                    <h1 className="font-headline text-5xl md:text-7xl font-extrabold text-[#1A1A1B] leading-tight tracking-tighter mb-6">
+                                        Empowering the Next Generation of Ethiopian Leaders
+                                    </h1>
+                                    <p className="text-xl md:text-2xl text-[#1A1A1B]/80 leading-relaxed mb-10 max-w-2xl">
+                                        Investing in education, nutrition, and technology to build a brighter future for every child in Addis Ababa.
+                                    </p>
+                                    <div className="flex flex-col sm:flex-row gap-4">
+                                        <button onClick={() => navigate('/donate')} className="px-8 py-4 bg-primary text-on-primary font-bold rounded-lg shadow-sm hover:bg-primary-container transition-all flex items-center justify-center gap-2">
+                                            Support Our Mission
+                                        </button>
+                                        <button onClick={() => navigate('/projects')} className="px-8 py-4 bg-transparent border-2 border-[#1A1A1B] text-[#1A1A1B] font-bold rounded-lg hover:bg-[#1A1A1B]/5 transition-all flex items-center justify-center">
+                                            Learn Our Story
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Impact Ribbon */}
+                        <section className="bg-surface-container-high py-20">
+                            <div className="max-w-screen-2xl mx-auto px-12">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-16 text-center">
+                                    <div className="flex flex-col gap-2">
+                                        <span className="text-5xl font-black text-primary font-headline">500+</span>
+                                        <span className="text-lg font-bold text-[#1A1A1B] tracking-wide uppercase">Students Enrolled</span>
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        <span className="text-5xl font-black text-primary font-headline">1.2M+</span>
+                                        <span className="text-lg font-bold text-[#1A1A1B] tracking-wide uppercase">Meals Served</span>
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        <span className="text-5xl font-black text-primary font-headline">98%</span>
+                                        <span className="text-lg font-bold text-[#1A1A1B] tracking-wide uppercase">Graduation Rate</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Core Initiatives */}
+                        <section className="py-32 bg-surface">
+                            <div className="max-w-screen-2xl mx-auto px-8">
+                                <div className="mb-20 text-center">
+                                    <h2 className="font-headline text-4xl font-extrabold text-[#1A1A1B] mb-4">Our Core Initiatives</h2>
+                                    <div className="w-20 h-1 bg-primary mx-auto"></div>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                                    <div className="group bg-surface-container-lowest rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-2">
+                                        <img className="aspect-[4/3] object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpf5ju2nbnRAbchF3imXnF-KnyNv2qrlOuf307S8CHYH0GhWwJGa29p2SiaF_6Wu3t7RATG1diM7x98TSAY7ftGeXNzCcXlcn84jJTVDcgHp4tVgwV5gJ4WlM2_q7vfLC2LZw-eq1JDFplSasDIcynKyAW4_0hUb6eYbCWjRMeG7c2UyFelRXpY7NAX2bL2XxcNbGP05J10g6Ne1mEf7qgIz34tMffztU1WsmrcABUOuT6OhQ_uvdM5HIhox-ShMBhU1gWCJtypw"/>
+                                        <div className="p-8">
+                                            <h3 className="font-headline text-2xl font-bold text-[#1A1A1B] mb-4">The School</h3>
+                                            <p className="text-secondary leading-relaxed">Our primary education program provides a safe, nurturing environment where students receive world-class instruction.</p>
+                                        </div>
+                                    </div>
+                                    <div className="group bg-surface-container-lowest rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-2">
+                                        <img className="aspect-[4/3] object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuABIVqtON4fLZEx-09DheNbt71MDHUjYQqvM6B8Z3hivRezMOUupdtxXqNw0EMunPqs6nIsFTl8tjREHTn2lswSyYcBx0hbttVrqU8g-w_KAcF4INjKob461rEY28K0k2Ot4wcwrp3eoyAozNgK1OWsTkSEa_EFLpuSZzJBLORuQZSJXVvYGGuQ5RsqL9ac-36xhO9ViHfwZ9cDrjY9NxeDEQ5vTVQ_PLqKigyRDqjTJq2OXvUojqNo3mcU88Ndo41sUVOoI-plZw"/>
+                                        <div className="p-8">
+                                            <h3 className="font-headline text-2xl font-bold text-[#1A1A1B] mb-4">Nutrition Program</h3>
+                                            <p className="text-secondary leading-relaxed">Our daily meal program ensures every student receives the nutrition required for peak focus.</p>
+                                        </div>
+                                    </div>
+                                    <div className="group bg-surface-container-lowest rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-2">
+                                        <img className="aspect-[4/3] object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0kCYk41CINYZbRGlCSO8n2S30D9tpUda8BAjnpDJXxNAL9sHuoqhNlPD5E-YR-X3DKzxmMmpEwHMfHiHGS8eKhjBEgKg49y9pMzTcrqZbGjfgv1m4NBokZ5bQYEv6aVLaRXG1ALVBHVy6c4AGXNd-ugkyjUZy-cJ2p5G6wtcU6Jl7yWsPRkQE9gn6iXU1SsJitk4g5Wb6t01LFIO5oxAbozuIpyZ-0MgSOV30CG8mCSEyfaHQO-GoIKWt8hvbZOmusIHUNt888A"/>
+                                        <div className="p-8">
+                                            <h3 className="font-headline text-2xl font-bold text-[#1A1A1B] mb-4">Tech Initiative</h3>
+                                            <p className="text-secondary leading-relaxed">Preparing students for the global economy through digital literacy and access to modern computer labs.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+                    <div className="fixed bottom-8 right-8 z-50">
+                        <button onClick={() => navigate('/donate')} className="flex items-center gap-3 bg-primary text-on-primary px-8 py-4 rounded-full shadow-2xl hover:bg-primary-container transition-all transform hover:scale-105">
+                            <span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 1"}}>favorite</span>
+                            <span className="font-bold tracking-widest uppercase text-sm">Donate Now</span>
+                        </button>
+                    </div>
+                    <Footer />
+                </div>
+            );
+        };
+
+        const ProjectsPage = () => {
+            const navigate = useNavigate();
+            return (
+                <div>
+                    <Navbar />
+                    <main>
+                        <section className="relative pt-24 pb-20 px-8 max-w-screen-2xl mx-auto">
+                            <div className="max-w-4xl">
+                                <span className="text-primary font-bold tracking-[0.2em] uppercase text-xs mb-4 block">Our Portfolio</span>
+                                <h1 className="font-headline text-5xl md:text-7xl font-extrabold text-[#1A1A1B] leading-tight tracking-tighter mb-8">
+                                    Empowering through <br/><span className="text-primary italic">Education & Care</span>.
+                                </h1>
+                                <p className="text-xl text-secondary leading-relaxed max-w-2xl font-body">
+                                    Fregenet International focuses on sustainable community growth through targeted initiatives in Addis Ababa, ensuring every child has the tools to succeed.
+                                </p>
+                            </div>
+                        </section>
+                        <section className="px-8 pb-32 max-w-screen-2xl mx-auto">
+                            <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
+                                <div className="md:col-span-8 group cursor-pointer" onClick={() => navigate('/transparency')}>
+                                    <div className="relative overflow-hidden aspect-[16/9] bg-surface-container mb-8">
+                                        <img alt="The School" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgZ-pin9_NMec6PnKcGZ0WFzw-XVJhn4RCbSiI6ecrfhQwA9dgkeI-dn2H57-QX66Y8xLRWJnKJHM_Uk8A0rcK_8Lur78tWJUJ9zktz9ApWOl6K9lBDVkEB2Ocyx08B23cDh6iMsyS0cytm0v6Kji51Ktqbfwrml3gsNHkkMQxolIc6dgsNgqIRSzjp_VDYO0xP9FmXQs0uH4r4H65s90oXUES9SDTC0KAgqKIJz1zfKDnRioDHQWlsivQyEa99ckbtGA0sE1Vpg"/>
+                                    </div>
+                                    <div className="flex justify-between items-start">
+                                        <div className="max-w-xl">
+                                            <h2 className="font-headline text-3xl font-bold text-[#1A1A1B] mb-3">The School</h2>
+                                            <p className="text-secondary mb-6">Our flagship facility providing primary education to underprivileged children.</p>
+                                        </div>
+                                        <span className="text-4xl font-headline font-extrabold text-surface-container-highest">01</span>
+                                    </div>
+                                </div>
+                                <div className="md:col-span-4 group cursor-pointer">
+                                    <div className="relative overflow-hidden aspect-[4/5] bg-surface-container mb-8">
+                                        <img alt="Nutrition" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBV9oWfA_tLVmZjKsYY0w8yGhdQwDbW0EsG68NXCda1r8iuEM4BGBXyjybXEGMwU6bLuEPcJCI6yW43gncigz10eUCiMLFXvdao_0aclOyjZzVHqamlqxExzvQmqODin61-ZA-nlz_KEZ2B9L3PSABXispqRK-eXIjXO6yk3sktbbFP8hac79acLCgSLKP0Z6Wt_fnRAPngHETbRhw-vLF-mHeAjjVG4boBSLTG6HAPrWHLKX039K5_4UYf7peXmH1tAiSBLIFUSg"/>
+                                    </div>
+                                    <div>
+                                        <span className="text-4xl font-headline font-extrabold text-surface-container-highest mb-4 block">02</span>
+                                        <h2 className="font-headline text-2xl font-bold text-[#1A1A1B] mb-3">Nutrition Program</h2>
+                                        <p className="text-secondary">Ensuring no child learns on an empty stomach.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+                    <Footer />
+                </div>
+            );
+        };
+
+        const GovernancePage = () => (
+            <div className="bg-surface">
+                <Navbar />
+                <main>
+                    <section className="py-24 md:py-32 px-8 max-w-screen-2xl mx-auto flex flex-col md:flex-row gap-16 items-end">
+                        <div className="md:w-3/5 space-y-8">
+                            <span className="text-primary font-bold tracking-[0.2em] uppercase text-sm">Organizational Excellence</span>
+                            <h1 className="font-headline font-extrabold text-5xl md:text-7xl leading-[1.1] tracking-tight text-[#1A1A1B]">
+                                Governing with <br/> Transparency & Trust.
+                            </h1>
+                            <p className="text-xl text-secondary leading-relaxed max-w-2xl font-light">
+                                Our leadership brings together global expertise and deep local insights to ensure every resource is directed toward transformative education.
+                            </p>
+                        </div>
+                        <div className="md:w-2/5 flex flex-col items-start gap-6 border-l border-outline-variant/30 pl-8 pb-4">
+                            <div className="flex items-center gap-4">
+                                <span className="material-symbols-outlined text-primary text-3xl">verified_user</span>
+                                <span className="text-sm font-bold text-[#1A1A1B] uppercase tracking-wider">100% Transparency</span>
+                            </div>
+                            <p className="text-sm text-secondary">Independent Board committed to the highest standards of fiscal responsibility.</p>
+                        </div>
+                    </section>
+                    <section className="bg-surface-container-low py-20 px-8">
+                        <div className="max-w-screen-2xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 text-center md:text-left">
+                            <div><div className="text-4xl font-headline font-extrabold text-primary mb-2">2004</div><div className="text-xs font-bold uppercase tracking-widest text-secondary">Year Established</div></div>
+                            <div><div className="text-4xl font-headline font-extrabold text-primary mb-2">12</div><div className="text-xs font-bold uppercase tracking-widest text-secondary">Board Members</div></div>
+                            <div><div className="text-4xl font-headline font-extrabold text-primary mb-2">98%</div><div className="text-xs font-bold uppercase tracking-widest text-secondary">Program Efficiency</div></div>
+                            <div><div className="text-4xl font-headline font-extrabold text-primary mb-2">Global</div><div className="text-xs font-bold uppercase tracking-widest text-secondary">Network Coverage</div></div>
+                        </div>
+                    </section>
+                    <section className="py-24 px-8 max-w-screen-2xl mx-auto">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                            <div className="group">
+                                <img className="aspect-[4/5] w-full object-cover grayscale group-hover:grayscale-0 transition-all rounded-lg mb-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuye5__ox8OCY7IlTgBDxKhKTCdxeXIC90gECnnMUwQczHtC2vstaxOGzBXpyGluQdu5sBzaAXhIzSKa6I1IU1v0ZIfxorMkdtDW9vk5Je1Ie0og4Nwov7OJUJa0uL4cHVKEihLCfsONNhstbnZwJUooHsL6HXtpscLy8knArMgF2ZwIotn6tNHOin-8wyGtetmnHs4x6-UW7CGxyJUPjuF-u7YUSaJyvL4OPxy8kwrOZJqtMn06eWFUD5Sgm9c4xMB6NuIjM1FQ"/>
+                                <h3 className="font-bold text-xl text-[#1A1A1B]">Dr. Elias Bekele</h3>
+                                <p className="text-primary font-bold text-xs uppercase tracking-widest">Board Chairman</p>
+                            </div>
+                            <div className="group">
+                                <img className="aspect-[4/5] w-full object-cover grayscale group-hover:grayscale-0 transition-all rounded-lg mb-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD46Tg_ie1nus9sSvDrJ7QbSjRVBmRCqhV6v3fjojm8ChGpZ1noyiGxsi3_bFeKFYdaXogb8aqPkFwfSqmYU6zq-VcjMUx7IxmThuvjkDrwQcK6saGOgYInMWaFQoDoPivAMITfw6ZcT9RecqQI-1eiLZnKoj0RyzGAzL3TlVxx--7HEFVg0-oBwiVPTAyYFqtk4hPmrCpAF9t9K_nUzdtXkS4i1t6QGSCuuOtDKxNXH6ghGpAmxllq1HwU4Ghg_utsY3Lx5O0peQ"/>
+                                <h3 className="font-bold text-xl text-[#1A1A1B]">Sara Tadesse</h3>
+                                <p className="text-primary font-bold text-xs uppercase tracking-widest">Executive Director</p>
+                            </div>
+                            <div className="group">
+                                <img className="aspect-[4/5] w-full object-cover grayscale group-hover:grayscale-0 transition-all rounded-lg mb-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8uFZmmihW15ju2DCgdHDc9Y9WQGD1P1BX0Aso_mq-EIF6reZ_H_3CER_5VTP6DxVH5sTH4odsq58QayBD2UR4PzPOOuHhHKv9Wq8VpyS8cQFJWDwGGKy9U3YeplQkQacWVdzATcR_bD4v0pLvb5cJVPNmzKWwcUW70658bhwSWiftkt5M37vFLDc8E_L2MhWC5Domx2dZzP-mokULHbDnwIuqlIbTGQlRL9WtEVukddoyiqhVTNEGbvnefzrA14b_Rn56F2ZdoQ"/>
+                                <h3 className="font-bold text-xl text-[#1A1A1B]">Marcus Chen</h3>
+                                <p className="text-primary font-bold text-xs uppercase tracking-widest">Financial Oversight</p>
+                            </div>
+                            <div className="group">
+                                <img className="aspect-[4/5] w-full object-cover grayscale group-hover:grayscale-0 transition-all rounded-lg mb-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDY9kgb3TrGTagsBIbNEDsktnWp-i_omyG4VXLUfg4IWcPDqPdzssL2QYlTa3r_LWK8moTYZQ2kFL1rujFRp7_t-dLUC24CzsCOy6P-2eepGW7Za-dSQkZzVXAYeVOTWp-AmJV4ctBtWkQV8q73QQ20sKk0XLxfK5xiNFYtgiq_SYHT6FKoY_cOxdexPoADxV_sim7S-VDzi1zl8RyZKkKZgqYLwq6poxTxjUyNULWdTdhWyXpolqQiDcgXJtEx3jR9ZAeB7tmciA"/>
+                                <h3 className="font-bold text-xl text-[#1A1A1B]">Amara Okafor</h3>
+                                <p className="text-primary font-bold text-xs uppercase tracking-widest">Education Policy</p>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+                <Footer />
+            </div>
+        );
+
+        const TransparencyPage = () => (
+            <div>
+                <Navbar />
+                <main>
+                    <section className="bg-surface py-24 md:py-32 px-8">
+                        <div className="max-w-screen-2xl mx-auto flex flex-col md:flex-row gap-16">
+                            <div className="md:w-7/12">
+                                <span className="inline-block text-primary font-bold tracking-[0.2em] uppercase text-xs mb-6">Institutional Accountability</span>
+                                <h1 className="font-headline text-5xl md:text-7xl font-extrabold text-[#1A1A1B] mb-8">
+                                    Trust Through <br/><span className="text-primary italic font-normal">Radical</span> Transparency.
+                                </h1>
+                                <p className="text-secondary text-xl max-w-2xl">
+                                    Full access to our financial records ensures every dollar is invested in the future of our students.
+                                </p>
+                            </div>
+                            <div className="md:w-5/12 hidden md:block">
+                                <img className="w-full h-full object-cover grayscale opacity-80 rounded-xl editorial-shadow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7ZaVfQQQGz-1Y-RKjwVVuuPymaqef4Um4ZXa7p73D94nmfENINV6mmac3toLb6TiOWEC9MAoeLQGdoGOCari42OyzhJcAI7Sofmojmxuoi4whOQk8uQVCyNUqBT1_jdOcjv1GRPCfe4EHdPdjfIhueUgsowm_bNUm82PsU4pGVow63aO-4rCndOy8evrqr9G3_ljBTL9X9xypIia4yHTrQm4Y9fvUuqLxpz4O7ykaSyxRjgkZGgVg4729HVS7QqAJv1T3zDM6OQ"/>
+                            </div>
+                        </div>
+                    </section>
+                    <section className="bg-surface py-24 px-8 max-w-screen-2xl mx-auto">
+                        <h2 className="font-headline text-3xl font-bold mb-12">Annual Reports</h2>
+                        <div className="space-y-4">
+                            {[2025, 2024, 2023].map(year => (
+                                <div key={year} className="group flex flex-col md:flex-row md:items-center justify-between p-8 bg-surface-container-lowest border border-transparent hover:border-outline-variant/30 rounded-xl transition-all duration-500 editorial-shadow">
+                                    <div className="flex items-center gap-8">
+                                        <span className="text-6xl font-headline font-black text-surface-container-highest group-hover:text-primary-container/20">{year}</span>
+                                        <div>
+                                            <h3 className="text-xl font-bold">Annual Impact Report</h3>
+                                            <p className="text-secondary text-sm">Audited Financial Statements • IRS Form 990</p>
+                                        </div>
+                                    </div>
+                                    <button className="bg-primary-container text-white px-8 py-4 rounded-lg font-bold uppercase text-xs">Download PDF</button>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                </main>
+                <Footer />
+            </div>
+        );
+
+        const DonatePage = () => {
+            const [selectedTier, setSelectedTier] = useState(50);
+            const [isMonthly, setIsMonthly] = useState(false);
+
+            return (
+                <div className="bg-background">
+                    <Navbar minimal />
+                    <main className="max-w-screen-xl mx-auto px-6 py-12 md:py-20">
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+                            <div className="lg:col-span-7">
+                                <h1 className="font-headline text-5xl md:text-6xl font-extrabold mb-6">Fuel a child's <span className="text-primary">future</span> today.</h1>
+                                <div className="mb-12">
+                                    <label className="block text-sm font-bold uppercase tracking-widest mb-4">Frequency</label>
+                                    <div className="inline-flex p-1 bg-surface-container-low rounded-lg w-full max-w-sm">
+                                        <button onClick={() => setIsMonthly(false)} className={`flex-1 py-3 text-sm font-bold rounded-md transition-all ${!isMonthly ? 'bg-white text-primary shadow-sm' : 'text-secondary'}`}>One-time</button>
+                                        <button onClick={() => setIsMonthly(true)} className={`flex-1 py-3 text-sm font-bold rounded-md transition-all ${isMonthly ? 'bg-white text-primary shadow-sm' : 'text-secondary'}`}>Monthly</button>
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
+                                    <div onClick={() => setSelectedTier(25)} className={`p-6 rounded-xl border-2 transition-all cursor-pointer bg-white ${selectedTier === 25 ? 'border-primary ring-1 ring-primary' : 'border-transparent'}`}>
+                                        <div className="flex justify-between items-start mb-2"><span className="text-3xl font-extrabold">$25</span></div>
+                                        <p className="text-sm text-secondary">Textbooks and stationery for one student for a year.</p>
+                                    </div>
+                                    <div onClick={() => setSelectedTier(50)} className={`p-6 rounded-xl border-2 transition-all cursor-pointer bg-white relative ${selectedTier === 50 ? 'border-primary ring-1 ring-primary' : 'border-transparent'}`}>
+                                        <span className="absolute -top-3 right-4 bg-primary text-white text-[10px] font-bold uppercase px-2 py-1 rounded">Most Impactful</span>
+                                        <div className="flex justify-between items-start mb-2"><span className="text-3xl font-extrabold">$50</span></div>
+                                        <p className="text-sm text-secondary">Daily nutritious meals for two students for a month.</p>
+                                    </div>
+                                    <div onClick={() => setSelectedTier(100)} className={`p-6 rounded-xl border-2 transition-all cursor-pointer bg-white ${selectedTier === 100 ? 'border-primary ring-1 ring-primary' : 'border-transparent'}`}>
+                                        <div className="flex justify-between items-start mb-2"><span className="text-3xl font-extrabold">$100</span></div>
+                                        <p className="text-sm text-secondary">Supports professional development workshops for teachers.</p>
+                                    </div>
+                                    <div className="p-6 rounded-xl bg-surface-container-low flex items-center gap-2">
+                                        <span className="text-2xl font-bold text-secondary">$</span>
+                                        <input className="bg-transparent border-none focus:ring-0 text-2xl font-bold w-full" placeholder="Custom" type="number" onChange={(e) => setSelectedTier(Number(e.target.value))}/>
+                                    </div>
+                                </div>
+                                <div className="bg-surface-container-low p-8 rounded-xl space-y-4">
+                                    <h3 className="font-bold text-xl">Donor Information</h3>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <input placeholder="First Name" className="p-3 rounded-lg border-none" />
+                                        <input placeholder="Last Name" className="p-3 rounded-lg border-none" />
+                                        <input placeholder="Email" className="p-3 rounded-lg border-none col-span-2" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="lg:col-span-5">
+                                <div className="sticky top-32 bg-white p-8 rounded-xl editorial-shadow border border-slate-100">
+                                    <h3 className="font-headline text-2xl font-bold mb-6">Donation Summary</h3>
+                                    <div className="space-y-4 mb-8">
+                                        <div className="flex justify-between text-secondary"><span>Support for Ethiopian Schools</span><span className="font-medium">${selectedTier}.00</span></div>
+                                        <div className="flex justify-between text-secondary"><span>Frequency</span><span className="font-medium text-on-surface">{isMonthly ? 'Monthly' : 'One-time'}</span></div>
+                                        <div className="h-px bg-slate-100 w-full"></div>
+                                        <div className="flex justify-between items-center pt-2">
+                                            <span className="text-lg font-bold">Total Donation</span>
+                                            <span className="text-3xl font-headline font-extrabold text-primary">${selectedTier}.00</span>
+                                        </div>
+                                    </div>
+                                    <button className="w-full bg-primary-container hover:bg-primary text-white py-5 rounded-lg font-bold uppercase tracking-widest text-sm shadow-md transition-all">Complete Donation</button>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                    <Footer />
+                </div>
+            );
+        };
+
+        const App = () => {
+            const { pathname } = useLocation();
+            useEffect(() => {
+                window.scrollTo(0, 0);
+            }, [pathname]);
+
+            return (
+                <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/projects" element={<ProjectsPage />} />
+                    <Route path="/governance" element={<GovernancePage />} />
+                    <Route path="/transparency" element={<TransparencyPage />} />
+                    <Route path="/donate" element={<DonatePage />} />
+                </Routes>
+            );
+        };
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(
+            <MemoryRouter>
+                <App />
+            </MemoryRouter>
+        );
+    </script>
+</body>
+</html>

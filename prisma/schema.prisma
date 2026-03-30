@@ -1,0 +1,84 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "./generated/client"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @db.Text
+  category    String   @default("General")
+  status      String   @default("active")
+  imageUrl    String
+  link        String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model BoardMember {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  role      String
+  bio       String?  @db.Text
+  imageUrl  String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Report {
+  id        String   @id @default(cuid())
+  year      Int
+  title     String
+  category  String
+  fileUrl   String
+  isVerified Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Subscriber {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+}
+
+model Donation {
+  id              String   @id @default(cuid())
+  amount          Float
+  currency        String
+  status          String
+  donorEmail      String
+  stripeSessionId String   @unique
+  createdAt       DateTime @default(now())
+}
+
+model ContactInquiry {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String   @db.Text
+  status    String   @default("new")
+  createdAt DateTime @default(now())
+}
+
+model Newsletter {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  publishedAt DateTime
+  excerpt     String   @db.Text
+  content     String   @db.LongText
+  imageUrl    String
+  fileUrl     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

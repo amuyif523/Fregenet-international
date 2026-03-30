@@ -1,0 +1,108 @@
+"use client";
+
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
+import { useFormStatus } from 'react-dom';
+import { Globe, AtSign, Send } from 'lucide-react';
+import { subscribeToNewsletter } from '@/app/actions';
+
+function SubscribeButton() {
+    const { pending } = useFormStatus();
+
+    return (
+        <button
+            type="submit"
+            disabled={pending}
+            className="bg-primary text-white px-4 py-2 rounded-r hover:bg-primary-container transition-colors disabled:opacity-60"
+            aria-label="Subscribe to newsletter"
+        >
+            <Send className="w-4 h-4 text-white" />
+        </button>
+    );
+}
+
+function NewsletterSubmissionTracker({ onCompleted }: { onCompleted: () => void }) {
+    const { pending } = useFormStatus();
+    const wasPending = useRef(false);
+
+    useEffect(() => {
+        if (pending) {
+            wasPending.current = true;
+            return;
+        }
+
+        if (wasPending.current) {
+            wasPending.current = false;
+            onCompleted();
+        }
+    }, [pending, onCompleted]);
+
+    return null;
+}
+
+export const Footer = () => {
+    const [newsletterSuccess, setNewsletterSuccess] = useState(false);
+
+    return (
+    <footer className="bg-[#f3f3f3] dark:bg-slate-950 font-body leading-relaxed text-sm">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 px-12 py-20 max-w-screen-2xl mx-auto">
+            <div>
+                <div className="text-base font-bold text-[#1A1A1B] dark:text-white mb-6">Fregenet International</div>
+                <p className="text-slate-500 dark:text-slate-400 mb-6">Building a sustainable future through education, nutrition, and technological empowerment for the children of Ethiopia.</p>
+                <div className="flex gap-4 text-secondary">
+                    <a href="https://fregenetlehitsanat.org" target="_blank" rel="noopener noreferrer" aria-label="Fregenet Lehitsanat legacy website" className="hover:text-primary transition-colors">
+                        <Globe className="w-5 h-5 cursor-pointer" />
+                    </a>
+                    <a href="https://fregenetfoundation.org" target="_blank" rel="noopener noreferrer" aria-label="Fregenet Foundation legacy website" className="hover:text-primary transition-colors">
+                        <AtSign className="w-5 h-5 cursor-pointer" />
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h4 className="font-bold text-[#1A1A1B] dark:text-white mb-6 uppercase tracking-widest text-xs">Impact</h4>
+                <ul className="space-y-4">
+                    <li><Link href="/transparency" className="text-slate-500 dark:text-slate-400 hover:text-[#1A1A1B]">Annual Reports</Link></li>
+                    <li><Link href="/transparency" className="text-slate-500 dark:text-slate-400 hover:text-[#1A1A1B]">Transparency</Link></li>
+                    <li><Link href="/projects" className="text-slate-500 dark:text-slate-400 hover:text-[#1A1A1B]">Global Impact</Link></li>
+                </ul>
+            </div>
+            <div>
+                <h4 className="font-bold text-[#1A1A1B] dark:text-white mb-6 uppercase tracking-widest text-xs">About Us</h4>
+                <ul className="space-y-4">
+                    <li><a href="https://fregenetlehitsanat.org" target="_blank" rel="noopener noreferrer" className="text-slate-500 dark:text-slate-400 hover:text-[#1A1A1B]">fregenetlehitsanat.org</a></li>
+                    <li><a href="https://fregenetfoundation.org" target="_blank" rel="noopener noreferrer" className="text-slate-500 dark:text-slate-400 hover:text-[#1A1A1B]">fregenetfoundation.org</a></li>
+                    <li><Link href="/newsletter" className="text-slate-500 dark:text-slate-400 hover:text-[#1A1A1B]">Newsletter</Link></li>
+                    <li><Link href="/contact" className="text-slate-500 dark:text-slate-400 hover:text-[#1A1A1B]">Contact Us</Link></li>
+                    <li><a href="#" className="text-slate-500 dark:text-slate-400 hover:text-[#1A1A1B]">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 className="font-bold text-[#1A1A1B] dark:text-white mb-6 uppercase tracking-widest text-xs">Newsletter</h4>
+                <p className="text-slate-500 dark:text-slate-400 mb-4">Stay updated on our impact.</p>
+                <form
+                    action={subscribeToNewsletter}
+                    className="space-y-3"
+                    onSubmit={() => setNewsletterSuccess(false)}
+                >
+                    <NewsletterSubmissionTracker onCompleted={() => setNewsletterSuccess(true)} />
+                    <div className="flex">
+                        <input
+                            className="bg-white border-none text-sm px-4 py-2 w-full focus:ring-1 focus:ring-primary rounded-l"
+                            placeholder="Email address"
+                            type="email"
+                            name="email"
+                            required
+                        />
+                        <SubscribeButton />
+                    </div>
+                    {newsletterSuccess ? <p className="text-green-700 text-xs">Thank you for subscribing!</p> : null}
+                </form>
+            </div>
+        </div>
+        <div className="bg-slate-200 dark:bg-slate-800 h-px w-full"></div>
+        <div className="py-8 text-center text-slate-500 dark:text-slate-400 text-xs">
+            © 2024 Fregenet International. All rights reserved.
+        </div>
+    </footer>
+    );
+};
