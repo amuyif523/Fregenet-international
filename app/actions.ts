@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import Stripe from 'stripe';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
+import { getAuthEnv, getStripeEnv } from '@/lib/env';
 import { createSessionToken } from '@/lib/session';
 import { saveBoardImage, saveNewsletterCoverImage, saveProjectImage, saveReportFile, validateBoardImageFile } from '@/lib/upload';
 
@@ -19,16 +20,17 @@ export async function exampleAction() {
 export async function loginAdmin(formData: FormData) {
     const submittedPassword = formData.get('password');
     const password = typeof submittedPassword === 'string' ? submittedPassword : '';
+    const { adminPassword, jwtSecret } = getAuthEnv();
 
-    if (!process.env.ADMIN_PASSWORD || !process.env.JWT_SECRET) {
+    if (!adminPassword || !jwtSecret) {
         return { success: false, error: 'Server misconfiguration. Missing auth environment variables.' };
     }
 
-    if (password !== process.env.ADMIN_PASSWORD) {
+    if (password !== adminPassword) {
         return { success: false, error: 'Invalid password. Please try again.' };
     }
 
-    const token = await createSessionToken(process.env.JWT_SECRET);
+    const token = await createSessionToken(jwtSecret);
     const cookieStore = await cookies();
 
     cookieStore.set('fregenet_session', token, {
@@ -286,12 +288,14 @@ export async function createCheckoutSession(
         return { success: false, message: 'Please provide a valid donation amount and email.' };
     }
 
-    if (!process.env.STRIPE_SECRET_KEY) {
+    const { stripeSecretKey, siteUrl } = getStripeEnv();
+
+    if (!stripeSecretKey) {
         return { success: false, message: 'Stripe is not configured yet.' };
     }
 
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+    const stripe = new Stripe(stripeSecretKey);
+    const baseUrl = siteUrl ?? 'http://localhost:3000';
     const amountInCents = Math.round(amount * 100);
 
     let session: Stripe.Checkout.Session;

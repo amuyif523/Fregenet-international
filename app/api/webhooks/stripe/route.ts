@@ -1,15 +1,18 @@
 import Stripe from 'stripe';
 import { headers } from 'next/headers';
 import { prisma } from '@/lib/prisma';
+import { getStripeEnv } from '@/lib/env';
 
 export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
-  if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
+  const { stripeSecretKey, stripeWebhookSecret } = getStripeEnv();
+
+  if (!stripeSecretKey || !stripeWebhookSecret) {
     return new Response('Stripe webhook is not configured', { status: 500 });
   }
 
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  const stripe = new Stripe(stripeSecretKey);
   const signature = (await headers()).get('stripe-signature');
 
   if (!signature) {
@@ -20,7 +23,7 @@ export async function POST(request: Request) {
 
   let event: Stripe.Event;
   try {
-    event = stripe.webhooks.constructEvent(payload, signature, process.env.STRIPE_WEBHOOK_SECRET);
+    event = stripe.webhooks.constructEvent(payload, signature, stripeWebhookSecret);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Invalid webhook signature';
     return new Response(message, { status: 400 });

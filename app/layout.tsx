@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import { validateCriticalEnvOnStartup } from '@/lib/env';
 
 export const metadata: Metadata = {
   title: "Fregenet International | Empowering Ethiopian Leaders",
@@ -11,6 +12,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  validateCriticalEnvOnStartup();
+
   return (
     <html lang="en" className="light">
       <head>

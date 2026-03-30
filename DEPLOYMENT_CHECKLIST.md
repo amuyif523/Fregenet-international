@@ -6,6 +6,7 @@ This checklist captures the minimum pre-deployment validation for the current ba
 
 - [ ] Working tree is clean (`git status` shows no unintended changes).
 - [ ] Baseline commit exists on the active branch.
+- [ ] Previously exposed credentials have been rotated outside the repository.
 - [ ] `.env.example` is present and current.
 - [ ] `docker-compose.yml` is present and current.
 - [ ] `README.md` startup flow matches current local setup.

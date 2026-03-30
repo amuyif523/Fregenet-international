@@ -1,11 +1,10 @@
 import { PrismaClient } from '../prisma/generated/client';
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
+import { requireEnv, validateCriticalEnvOnStartup } from '@/lib/env';
 
-if (!process.env.DATABASE_URL) {
-  throw new Error('DATABASE_URL is required');
-}
+validateCriticalEnvOnStartup();
 
-const adapter = new PrismaMariaDb(process.env.DATABASE_URL);
+const adapter = new PrismaMariaDb(requireEnv('DATABASE_URL'));
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
