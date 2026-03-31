@@ -4,7 +4,11 @@ import { requireEnv, validateCriticalEnvOnStartup } from '@/lib/env';
 
 validateCriticalEnvOnStartup();
 
-const adapter = new PrismaMariaDb(requireEnv('DATABASE_URL'));
+const adapter = new PrismaMariaDb(requireEnv('DATABASE_URL'), {
+  connectTimeout: 30000,
+  socketTimeout: 30000,
+  allowPublicKeyRetrieval: true,
+});
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;

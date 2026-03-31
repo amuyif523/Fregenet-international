@@ -5,7 +5,11 @@ if (!process.env.DATABASE_URL) {
   throw new Error('DATABASE_URL is required for seeding')
 }
 
-const adapter = new PrismaMariaDb(process.env.DATABASE_URL)
+const adapter = new PrismaMariaDb(process.env.DATABASE_URL, {
+  connectTimeout: 30000,
+  socketTimeout: 30000,
+  allowPublicKeyRetrieval: true,
+})
 
 const prisma = new PrismaClient({ adapter })
 
