@@ -9,7 +9,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma:seed": "node prisma/seed.ts",
+    "prisma:seed": "npx tsx --env-file=.env prisma/seed.ts",
     "assets:board:prepare": "bash scripts/ensure-board-images-dir.sh",
     "assets:projects:prepare": "node scripts/ensure-project-dirs.js"
   },
@@ -43,6 +43,6 @@
     "typescript": "^5.9.3"
   },
   "prisma": {
-    "seed": "node prisma/seed.ts"
+    "seed": "npx tsx --env-file=.env prisma/seed.ts"
   }
 }
