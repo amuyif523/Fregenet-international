@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Lock } from "lucide-react";
+import Image from "next/image";
 
 export const Navbar = ({ minimal = false }: { minimal?: boolean }) => {
   const pathname = usePathname();
@@ -14,8 +15,15 @@ export const Navbar = ({ minimal = false }: { minimal?: boolean }) => {
       return (
           <nav className="sticky top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl">
               <div className="flex justify-between items-center px-8 py-5 max-w-screen-2xl mx-auto">
-                  <Link href="/" className="text-lg font-bold uppercase tracking-widest text-[#1A1A1B]">
-                      Fregenet Foundation
+                  <Link href="/">
+                      <Image 
+                          src="/images/fregenet_logo.png" 
+                          alt="Fregenet Foundation" 
+                          height={64} 
+                          width={225}
+                          className="h-12 md:h-16 w-auto object-contain"
+                          priority
+                      />
                   </Link>
                   <div className="hidden md:flex gap-8 items-center">
                       <Link href="/newsletter" className="text-slate-500 hover:text-[#1A1A1B] font-medium transition-all duration-300">Newsletter</Link>
@@ -34,8 +42,15 @@ export const Navbar = ({ minimal = false }: { minimal?: boolean }) => {
   return (
       <nav className="sticky top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl font-headline antialiased tracking-tight border-b border-slate-100">
           <div className="flex justify-between items-center px-8 py-5 max-w-screen-2xl mx-auto">
-              <Link href="/" className="text-lg font-bold uppercase tracking-widest text-[#1A1A1B] dark:text-slate-100">
-                  Fregenet Foundation
+              <Link href="/">
+                  <Image 
+                      src="/images/fregenet_logo.png" 
+                      alt="Fregenet Foundation" 
+                      height={64} 
+                      width={225}
+                      className="h-12 md:h-16 w-auto object-contain dark:brightness-100"
+                      priority
+                  />
               </Link>
               <div className="hidden md:flex items-center space-x-8">
                   <Link href="/" className={`${isActive('/') ? 'text-[#98001b] font-bold border-b-2 border-[#98001b] pb-1' : 'text-slate-500 font-medium hover:text-[#be1e2d]'} transition-all duration-300`}>Our Mission</Link>

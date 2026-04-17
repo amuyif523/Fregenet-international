@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useActionState } from 'react';
 import { Globe, AtSign, Send } from 'lucide-react';
 import { subscribeToNewsletter } from '@/app/actions';
+import Image from 'next/image';
 
 type SubscribeState = {
     success: boolean;
@@ -38,7 +39,15 @@ export const Footer = () => {
     <footer className="bg-[#f3f3f3] dark:bg-slate-950 font-body leading-relaxed text-sm">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 px-12 py-20 max-w-screen-2xl mx-auto">
             <div>
-                <div className="text-base font-bold text-[#1A1A1B] dark:text-white mb-6">Fregenet Foundation</div>
+                <div className="mb-6">
+                    <Image 
+                        src="/images/fregenet_logo.png" 
+                        alt="Fregenet Foundation" 
+                        height={40} 
+                        width={140}
+                        className="h-10 w-auto object-contain dark:brightness-100"
+                    />
+                </div>
                 <p className="text-slate-500 dark:text-slate-400 mb-6">Building a sustainable future through education, nutrition, and technological empowerment for the children of Ethiopia.</p>
                 <div className="flex gap-4 text-secondary">
                     <a href="https://fregenetlehitsanat.org" target="_blank" rel="noopener noreferrer" aria-label="Fregenet Lehitsanat legacy website" className="hover:text-primary transition-colors">
