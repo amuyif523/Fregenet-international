@@ -1,33 +1,17 @@
-import { createServer } from 'node:http';
-import { parse } from 'node:url';
-import next from 'next';
+/**
+ * HahuCloud / LiteSpeed Production Entry Point
+ * 
+ * This file acts as a bridge to the Next.js standalone server.
+ * It is required because LiteSpeed (lsnode) explicitly looks for a server.js
+ * file in the application root, but cannot execute 'next start' directly.
+ */
 
-const dev = process.env.NODE_ENV !== 'production';
-const hostname = 'localhost';
-const port = process.env.PORT || 3000;
+process.env.NODE_ENV = 'production';
+process.env.PORT = process.env.PORT || 3000;
 
-// Initialize Next.js in production mode
-const app = next({ dev: false, hostname, port });
-const handle = app.getRequestHandler();
+// Log startup for Passenger/LiteSpeed debugging
+console.log(`Starting production server on port ${process.env.PORT}...`);
 
-app.prepare().then(() => {
-  createServer(async (req, res) => {
-    try {
-      // Be sure to pass `true` as the second argument to `url.parse`.
-      // This tells it to parse the query portion of the URL.
-      const parsedUrl = parse(req.url, true);
-      await handle(req, res, parsedUrl);
-    } catch (err) {
-      console.error('Error occurred handling', req.url, err);
-      res.statusCode = 500;
-      res.end('Internal server error');
-    }
-  })
-    .once('error', (err) => {
-      console.error(err);
-      process.exit(1);
-    })
-    .listen(port, () => {
-      console.log(`> Ready on http://${hostname}:${port}`);
-    });
-});
+// Import the standalone server entry point
+// Next.js standalone output bundles all dependencies into .next/standalone
+import('./.next/standalone/server.js');
