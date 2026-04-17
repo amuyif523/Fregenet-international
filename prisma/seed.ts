@@ -1,15 +1,8 @@
 import { PrismaClient } from './generated/client/index.js'
 import { PrismaMariaDb } from '@prisma/adapter-mariadb'
+import { requireEnv } from '../lib/env.js'
 
-if (!process.env.DATABASE_URL) {
-  throw new Error('DATABASE_URL is required for seeding')
-}
-
-const adapter = new PrismaMariaDb(process.env.DATABASE_URL, {
-  connectTimeout: 30000,
-  socketTimeout: 30000,
-  allowPublicKeyRetrieval: true,
-})
+const adapter = new PrismaMariaDb(requireEnv('DATABASE_URL'))
 
 const prisma = new PrismaClient({ adapter })
 
@@ -39,7 +32,7 @@ async function main() {
 
 main()
   .then(async () => {
-    console.log('Seed executed successfully');
+    console.log('Seed executed successfully')
     await prisma.$disconnect()
   })
   .catch(async (e) => {
