@@ -37,22 +37,50 @@ async function syncDonationStatusFromSession(
     data: updateData,
   });
 
-  if (updated.count > 0) return;
+  if (updated.count > 0) {
+    // Falls through to ERP sync logic
+  } else if (donorEmail && amount !== null) {
+    try {
+      await prisma.donation.create({
+        data: {
+          amount,
+          currency: (session.currency ?? 'usd').toUpperCase(),
+          status,
+          donorEmail,
+          stripeSessionId: session.id,
+        },
+      });
+    } catch {
+      // Ignore races where the row is created after updateMany but before create.
+    }
+  }
 
-  if (!donorEmail || amount === null) return;
-
-  try {
-    await prisma.donation.create({
-      data: {
-        amount,
-        currency: (session.currency ?? 'usd').toUpperCase(),
-        status,
-        donorEmail,
-        stripeSessionId: session.id,
-      },
-    });
-  } catch {
-    // Ignore races where the row is created after updateMany but before create.
+  // --- ERP Sync Logic ---
+  if (status === 'completed' && amount !== null) {
+    try {
+      await prisma.erpTransaction.upsert({
+        where: { referenceId: session.id },
+        update: {
+          donorEmail,
+          donorName: session.customer_details?.name,
+        },
+        create: {
+          type: 'CASH',
+          category: 'REVENUE',
+          status: 'PENDING_VERIFICATION',
+          source: 'STRIPE',
+          description: `Stripe Donation: ${session.id}`,
+          originalAmount: amount,
+          originalCurrency: (session.currency ?? 'usd').toUpperCase(),
+          donorName: session.customer_details?.name,
+          donorEmail: donorEmail,
+          referenceId: session.id,
+          donorIntent: session.metadata?.donorIntent || 'Online Donation'
+        }
+      });
+    } catch (e) {
+      console.error('ERP Webhook Sync Error:', e);
+    }
   }
 }
 
