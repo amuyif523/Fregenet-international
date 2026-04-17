@@ -20,25 +20,14 @@ Password: set via DB_PASSWORD (required for real environments)
 Set these values in your local `.env` before running Docker:
 
 ```env
+DATABASE_URL="mysql://fregenet_admin:change_me_db_password@127.0.0.1:3307/fregenet_international_db"
 DB_NAME="fregenet_international_db"
 DB_USER="fregenet_admin"
-DB_PASSWORD="replace-with-strong-db-password"
-DB_ROOT_PASSWORD="replace-with-strong-root-password"
+DB_PASSWORD="change_me_db_password"
+DB_ROOT_PASSWORD="change_me_root_password"
 ```
 
-Then set `DATABASE_URL` to match those values:
-
-```env
-DATABASE_URL="mysql://DB_USER:DB_PASSWORD@127.0.0.1:3307/DB_NAME"
-```
-
-Example (with URL-encoded password characters):
-
-```env
-DATABASE_URL="mysql://fregenet_admin:replace-with-url-encoded-password@127.0.0.1:3307/fregenet_international_db"
-```
-
-Update your local `.env` so `DATABASE_URL` and `DB_*` values align.
+If you change `DB_NAME`, `DB_USER`, or `DB_PASSWORD`, update `DATABASE_URL` to match the same local MariaDB container values.
 
 ### Upload Storage Configuration
 
