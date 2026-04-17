@@ -1,9 +1,9 @@
 import { PrismaClient } from './generated/client/index.js'
-import { PrismaMariaDb } from '@prisma/adapter-mariadb'
-import { requireEnv } from '../lib/env.js'
+import { PrismaPg } from '@prisma/adapter-pg'
+import pg from 'pg'
 
-const adapter = new PrismaMariaDb(requireEnv('DATABASE_URL'))
-
+const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL })
+const adapter = new PrismaPg(pool)
 const prisma = new PrismaClient({ adapter })
 
 async function main() {
@@ -28,6 +28,30 @@ async function main() {
       imageUrl: '',
     },
   })
+
+  // Chart of Accounts Seeding
+  const accounts = [
+    { code: '1000', name: 'Cash on Hand', balance: 0 },
+    { code: '1001', name: 'Cash at Bank', balance: 0 },
+    { code: '1100', name: 'In-Kind Inventory', balance: 0 },
+    { code: '4000', name: 'Donation Revenue', balance: 0 },
+    { code: '4001', name: 'In-Kind Revenue', balance: 0 },
+    { code: '5000', name: 'School Supplies Expense', balance: 0 },
+  ]
+
+  for (const acc of accounts) {
+    await prisma.erpAccount.upsert({
+      where: { code: acc.code },
+      update: {},
+      create: {
+        code: acc.code,
+        name: acc.name,
+        balance: acc.balance,
+      },
+    })
+  }
+
+  console.log('Chart of Accounts seeded successfully')
 }
 
 main()

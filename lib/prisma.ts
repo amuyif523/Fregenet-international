@@ -1,10 +1,12 @@
 import { PrismaClient } from '../prisma/generated/client';
-import { PrismaMariaDb } from '@prisma/adapter-mariadb';
+import { PrismaPg } from '@prisma/adapter-pg';
+import pg from 'pg';
 import { requireEnv, validateCriticalEnvOnStartup } from '@/lib/env';
 
 validateCriticalEnvOnStartup();
 
-const adapter = new PrismaMariaDb(requireEnv('DATABASE_URL'));
+const pool = new pg.Pool({ connectionString: requireEnv('DATABASE_URL') });
+const adapter = new PrismaPg(pool);
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;

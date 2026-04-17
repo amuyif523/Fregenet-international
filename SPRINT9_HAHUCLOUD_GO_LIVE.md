@@ -26,7 +26,7 @@ Set all required production env vars in HahuCloud app settings:
 
 ```env
 NODE_ENV=production
-DATABASE_URL=mysql://USER:PASSWORD@HOST:3306/DATABASE
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DATABASE
 JWT_SECRET=<long-random-secret>
 ADMIN_PASSWORD=<strong-admin-password>
 STRIPE_SECRET_KEY=sk_live_...

@@ -50,6 +50,11 @@ export function validateCriticalEnvOnStartup(): void {
     throw new Error(`Missing required environment variable(s): ${missingAlways.join(', ')}`);
   }
 
+  const dbUrl = requireEnv('DATABASE_URL');
+  if (!dbUrl.startsWith('postgresql://')) {
+    throw new Error('DATABASE_URL must be a valid PostgreSQL connection string starting with postgresql://');
+  }
+
   if (isProduction()) {
     const missingProd = missingVars(productionRequired);
     if (missingProd.length > 0) {

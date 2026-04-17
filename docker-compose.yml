@@ -1,30 +1,22 @@
 services:
   fregenet-db:
-    image: mariadb:11
+    image: postgres:17-alpine
     container_name: fregenet-itl-db
     restart: always
-    command:
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_unicode_ci
     environment:
-      MYSQL_DATABASE: ${DB_NAME:-fregenet_international_db}
-      MYSQL_USER: ${DB_USER:-fregenet_admin}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-change_me_db_password}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-change_me_root_password}
+      POSTGRES_DB: ${DB_NAME:-fregenet_international_db}
+      POSTGRES_USER: ${DB_USER:-fregenet_admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-change_me_db_password}
     ports:
-      - "127.0.0.1:3307:3306"
+      - "127.0.0.1:5432:5432"
     volumes:
-      - fregenet_data:/var/lib/mysql
+      - fregenet_postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "mariadb-admin ping -h 127.0.0.1 -u\"$${MYSQL_USER}\" -p\"$${MYSQL_PASSWORD}\" --silent",
-        ]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 10
       start_period: 20s
 
 volumes:
-  fregenet_data:
+  fregenet_postgres_data:
