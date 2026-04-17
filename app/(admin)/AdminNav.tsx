@@ -2,10 +2,15 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { LayoutDashboard, FileText } from 'lucide-react';
+import { LayoutDashboard, FileText, Wallet, GraduationCap, Users, Utensils } from 'lucide-react';
 
 const navItems = [
   { href: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+  { href: '/admin/erp', icon: LayoutDashboard, label: 'ERP Operations' },
+  { href: '/admin/erp/finance', icon: Wallet, label: 'Financials' },
+  { href: '/admin/erp/school/students', icon: GraduationCap, label: 'Students' },
+  { href: '/admin/erp/school/nutrition', icon: Utensils, label: 'Nutrition' },
+  { href: '/admin/erp/school/staff', icon: Users, label: 'Staff' },
   { href: '/admin/subscribers', icon: FileText, label: 'Subscribers' },
   { href: '/admin/board', icon: FileText, label: 'Board Members' },
   { href: '/admin/projects', icon: FileText, label: 'Projects' },
