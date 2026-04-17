@@ -1,6 +1,6 @@
-import { ShieldCheck, LogOut, LayoutDashboard, FileText } from 'lucide-react'
-import Link from 'next/link'
+import { ShieldCheck, LogOut } from 'lucide-react'
 import { logoutAdmin } from '@/app/actions'
+import { AdminNav } from './AdminNav'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -12,29 +12,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
              <span className="font-headline font-bold text-[#1A1A1B]">Console</span>
           </div>
         </div>
-        <nav className="flex-1 p-6 space-y-2">
-          <Link href="/admin/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container text-primary font-bold">
-            <LayoutDashboard className="w-5 h-5"/> Dashboard
-          </Link>
-          <Link href="/admin/subscribers" className="flex items-center gap-3 px-4 py-3 rounded-lg text-secondary hover:bg-surface-container transition-all">
-            <FileText className="w-5 h-5"/> Subscribers
-          </Link>
-          <Link href="/admin/board" className="flex items-center gap-3 px-4 py-3 rounded-lg text-secondary hover:bg-surface-container transition-all">
-            <FileText className="w-5 h-5"/> Board Members
-          </Link>
-          <Link href="/admin/projects" className="flex items-center gap-3 px-4 py-3 rounded-lg text-secondary hover:bg-surface-container transition-all">
-            <FileText className="w-5 h-5"/> Projects
-          </Link>
-          <Link href="/admin/reports" className="flex items-center gap-3 px-4 py-3 rounded-lg text-secondary hover:bg-surface-container transition-all">
-            <FileText className="w-5 h-5"/> Reports
-          </Link>
-          <Link href="/admin/newsletters" className="flex items-center gap-3 px-4 py-3 rounded-lg text-secondary hover:bg-surface-container transition-all">
-            <FileText className="w-5 h-5"/> Newsletters
-          </Link>
-          <Link href="/admin/inquiries" className="flex items-center gap-3 px-4 py-3 rounded-lg text-secondary hover:bg-surface-container transition-all">
-            <FileText className="w-5 h-5"/> Inquiries
-          </Link>
-        </nav>
+        
+        <AdminNav />
+        
         <div className="p-6 border-t border-outline-variant/30">
           <form action={logoutAdmin}>
             <button className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-error hover:bg-error-container/20 transition-all font-bold">
