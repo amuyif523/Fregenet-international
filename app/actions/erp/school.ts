@@ -91,7 +91,7 @@ export async function getSchoolMetrics() {
     const [studentCount, staffCount, teachersCount] = await Promise.all([
         prisma.student.count({ where: { status: 'ACTIVE' } }),
         prisma.staff.count({ where: { isActive: true } }),
-        prisma.staff.count({ where: { isActive: true, role: { contains: 'Teacher', mode: 'insensitive' } } })
+        prisma.staff.count({ where: { isActive: true, role: { contains: 'Teacher' } } })
     ]);
 
     return {
