@@ -41,7 +41,10 @@ export function NutritionBulkEntryForm({ allStudents }: { allStudents: SimpleStu
         if (result.success) {
             setMessage({ type: 'success', text: `Feeding log recorded for ${activeCount} students!` });
             setAbsenteeIds([]);
-            (document.getElementById('nutrition-form') as HTMLFormElement).reset();
+            const formElement = document.getElementById('nutrition-form') as HTMLFormElement | null;
+            if (formElement) {
+                formElement.reset();
+            }
         } else {
             setMessage({ type: 'error', text: result.error || 'Failed to record feeding event.' });
         }

@@ -17,8 +17,14 @@ export function HealthGrowthChart({ history }: { history: HealthRecord[] }) {
 
     // Take last 8 measurements for the chart
     const data = history.slice(-8);
-    const maxHeight = Math.max(...data.map(d => Number(d.height)));
-    const maxWeight = Math.max(...data.map(d => Number(d.weight)));
+    
+    // Extract numeric values with defensive fallback for zero/null values
+    const heights = data.map(d => Number(d.height) || 0).filter(h => h > 0);
+    const weights = data.map(d => Number(d.weight) || 0).filter(w => w > 0);
+    
+    // Default to 1 to prevent division by zero or Infinity errors in percentage calculations
+    const maxHeight = Math.max(...(heights.length > 0 ? heights : [1]));
+    const maxWeight = Math.max(...(weights.length > 0 ? weights : [1]));
 
     return (
         <div className="space-y-12 pb-4">

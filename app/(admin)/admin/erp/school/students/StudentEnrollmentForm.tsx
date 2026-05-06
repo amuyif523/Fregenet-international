@@ -27,7 +27,10 @@ export function StudentEnrollmentForm() {
         const result = await upsertStudent(data);
         if (result.success) {
             // Re-render handled by revalidatePath in action
-            (document.getElementById('enrollment-form') as HTMLFormElement).reset();
+            const formElement = document.getElementById('enrollment-form') as HTMLFormElement | null;
+            if (formElement) {
+                formElement.reset();
+            }
         } else {
             setError(result.error || 'Failed to enroll student.');
         }
