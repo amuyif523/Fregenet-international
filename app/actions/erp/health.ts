@@ -2,8 +2,8 @@
 
 import { prisma } from '@/lib/prisma';
 import { 
-    nutritionalLogSchema, 
-    NutritionalLogInput, 
+    nutritionRecordSchema, 
+    NutritionRecordInput, 
     healthRecordSchema, 
     HealthRecordInput 
 } from '@/lib/validations/erp';
@@ -12,11 +12,11 @@ import { revalidatePath } from 'next/cache';
 /**
  * NUTRITION: Daily Feeding Log Logic
  */
-export async function logDailyMeal(data: NutritionalLogInput) {
-    const validated = nutritionalLogSchema.parse(data);
+export async function logDailyMeal(data: NutritionRecordInput) {
+    const validated = nutritionRecordSchema.parse(data);
     
     try {
-        await prisma.nutritionalLog.create({
+        await prisma.nutritionRecord.create({
             data: validated
         });
         revalidatePath('/admin/erp/school/nutrition');
@@ -68,7 +68,7 @@ export async function getStudentHealthHistory(studentId: string) {
  * METRICS: Impact Aggregation
  */
 export async function getSchoolNutritionStats() {
-    const totalMeals = await prisma.nutritionalLog.aggregate({
+    const totalMeals = await prisma.nutritionRecord.aggregate({
         _sum: { studentCount: true }
     });
 

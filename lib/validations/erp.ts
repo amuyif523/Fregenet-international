@@ -77,7 +77,7 @@ export const staffSchema = z.object({
   isActive: z.boolean().default(true),
 });
 
-export const nutritionalLogSchema = z.object({
+export const nutritionRecordSchema = z.object({
   date: z.coerce.date().default(() => new Date()),
   mealType: z.string().min(1, 'Meal type is required'),
   menu: z.string().min(1, 'Menu details are required'),
@@ -100,7 +100,7 @@ export type ErpAccountInput = z.infer<typeof erpAccountSchema>;
 export type ErpTransactionInput = z.infer<typeof erpTransactionSchema>;
 export type ErpJournalEntryInput = z.infer<typeof erpJournalEntrySchema>;
 export type InventoryItemInput = z.infer<typeof inventoryItemSchema>;
-export type NutritionalLogInput = z.infer<typeof nutritionalLogSchema>;
+export type NutritionRecordInput = z.infer<typeof nutritionRecordSchema>;
 export type HealthRecordInput = z.infer<typeof healthRecordSchema>;
 
 

@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
 }
 
 model Project {
@@ -146,6 +146,7 @@ model Student {
   bio            String?       @db.Text
   school         String        @default("Denbi")
   healthRecords  HealthRecord[]
+  attendances    Attendance[]
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 }
@@ -223,14 +224,29 @@ model Staff {
   updatedAt DateTime @updatedAt
 }
 
-model NutritionalLog {
+model Attendance {
+  id        String   @id @default(cuid())
+  date      DateTime @default(now())
+  studentId String
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  isPresent Boolean  @default(true)
+  notes     String?  @db.Text
+  school    String   @default("Denbi")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([studentId])
+  @@index([date])
+}
+
+model NutritionRecord {
   id           String   @id @default(cuid())
   date         DateTime @default(now())
   mealType     String   // Breakfast, Lunch
   menu         String   @db.Text
   studentCount Int      // Total students fed
   school       String   // e.g., Denbi
-  absenteeIds  String[] @default([]) // Array of student IDs
+  absenteeIds  Json     // Array of student IDs
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
