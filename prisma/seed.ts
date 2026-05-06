@@ -1,10 +1,9 @@
 import { PrismaClient } from './generated/client/index.js'
-import { PrismaPg } from '@prisma/adapter-pg'
-import pg from 'pg'
+import { PrismaMariaDb } from '@prisma/adapter-mariadb'
 
-const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL })
-const adapter = new PrismaPg(pool)
-const prisma = new PrismaClient({ adapter })
+const prisma = new PrismaClient({
+  adapter: new PrismaMariaDb(process.env.DATABASE_URL!),
+})
 
 async function main() {
   await prisma.boardMember.upsert({
@@ -52,6 +51,78 @@ async function main() {
   }
 
   console.log('Chart of Accounts seeded successfully')
+
+  // Create a sample student with health history, attendance, and nutrition records
+  const studentId = 'seed-student-1'
+  await prisma.student.upsert({
+    where: { id: studentId },
+    update: {},
+    create: {
+      id: studentId,
+      firstName: 'Test',
+      lastName: 'Student',
+      dateOfBirth: new Date('2015-01-01'),
+      gender: 'Female',
+      school: 'Denbi',
+    },
+  })
+
+  // Seed 6 health records (one per month) to ensure HealthGrowthChart has data
+  const now = new Date();
+  const healthSamples = [
+    { height: 120.5, weight: 25.3 },
+    { height: 122.1, weight: 26.0 },
+    { height: 123.6, weight: 26.8 },
+    { height: 125.0, weight: 27.4 },
+    { height: 126.4, weight: 28.1 },
+    { height: 127.8, weight: 29.0 },
+  ]
+
+  for (let i = 0; i < healthSamples.length; i++) {
+    const sampleDate = new Date(now);
+    sampleDate.setMonth(now.getMonth() - (healthSamples.length - 1 - i));
+    // create if not exists - use a composite uniqueness approach by date+studentId isn't enforced, so skip checks
+    await prisma.healthRecord.create({
+      data: {
+        date: sampleDate,
+        height: healthSamples[i].height,
+        weight: healthSamples[i].weight,
+        bmi: undefined,
+        studentId,
+      },
+    })
+  }
+
+  // Seed attendance for the last 7 days
+  for (let d = 0; d < 7; d++) {
+    const attendDate = new Date(now);
+    attendDate.setDate(now.getDate() - d);
+    await prisma.attendance.create({
+      data: {
+        date: attendDate,
+        studentId,
+        isPresent: d % 6 !== 0, // mark one day absent
+        notes: d % 6 === 0 ? 'Absent due to illness' : undefined,
+        school: 'Denbi',
+      },
+    })
+  }
+
+  // Seed a few NutritionRecord entries
+  for (let d = 0; d < 3; d++) {
+    const mealDate = new Date(now);
+    mealDate.setDate(now.getDate() - d);
+    await prisma.nutritionRecord.create({
+      data: {
+        date: mealDate,
+        mealType: d === 0 ? 'Lunch' : 'Breakfast',
+        menu: d === 0 ? 'Injera and shiro' : 'Bread and tea',
+        studentCount: 120 - d,
+        school: 'Denbi',
+        absenteeIds: [],
+      },
+    })
+  }
 }
 
 main()
