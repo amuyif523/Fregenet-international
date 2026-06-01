@@ -1,9 +1,4 @@
-import { PrismaClient } from './generated/client/index.js'
-import { PrismaMariaDb } from '@prisma/adapter-mariadb'
-
-const prisma = new PrismaClient({
-  adapter: new PrismaMariaDb(process.env.DATABASE_URL!),
-})
+import { prisma } from '../lib/prisma'
 
 async function main() {
   await prisma.boardMember.upsert({
