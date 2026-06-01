@@ -329,7 +329,7 @@ export async function createCheckoutSession(
     try {
         session = await stripe.checkout.sessions.create({
             mode: 'payment',
-            payment_method_types: ['card'],
+            automatic_payment_methods: { enabled: true },
             customer_email: donorEmail,
             success_url: `${baseUrl}/donate?success=1`,
             cancel_url: `${baseUrl}/donate?canceled=1`,
