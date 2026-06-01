@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useActionState, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { upsertNewsletter } from '@/app/actions';
+import RichTextEditor from './RichTextEditor';
 
 type NewsletterFormData = {
   id?: string;
@@ -130,12 +131,11 @@ export default function NewsletterForm({ title, description, initialData, redire
 
           <div className="space-y-2">
             <label className="text-xs font-bold uppercase tracking-widest text-[#1A1A1B]">Content (HTML/Text)</label>
-            <textarea
+            <RichTextEditor
               name="content"
-              rows={10}
               defaultValue={initialData.content}
+              placeholder="Write your newsletter here, or paste an article with images."
               required
-              className="w-full rounded-lg border border-outline-variant/30 bg-white px-4 py-3 font-mono text-sm outline-none focus:border-primary"
             />
           </div>
 
